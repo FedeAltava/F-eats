@@ -1,11 +1,17 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "../pages/HomePage";
 
-
-export const AppRouter = () => {
+const AppRouter = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+        
+        {/* Redirección por defecto */}
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default AppRouter
+export default AppRouter;
