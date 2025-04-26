@@ -12,14 +12,14 @@ export class Name extends ValueObject<NameProps> {
     return this.props.value;
   }
 
-  public static create(name: NameProps): Name {
-    if (!name.value) {
+  public static create(name: string): Name {
+    if (!name) {
       throw new Error("Name is required");
     }
-    if (name.value.trim().length < 2 || name.value.trim().length > 15) {
+    if (name.trim().length < 2 || name.trim().length > 15) {
       throw new Error("The name is invalid");
     }
-    const cleanedName = name.value.trim();
+    const cleanedName = name.trim();
 
     return new Name({ value: cleanedName });
   }

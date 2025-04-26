@@ -15,14 +15,14 @@ export class Email extends ValueObject<EmailProps> {
     return this.props.value;
   }
 
-  public static create(email: EmailProps): Email {
-    if (!email.value) {
+  public static create(email: string): Email {
+    if (!email) {
       throw new Error("Email is required");
     }
-    if (!EMAIL_PATTERN.test(email.value)) {
+    if (!EMAIL_PATTERN.test(email)) {
       throw new Error("The email is invalid");
     }
 
-    return new Email({ value: email.value.toLocaleLowerCase() });
+    return new Email({ value: email.toLocaleLowerCase() });
   }
 }

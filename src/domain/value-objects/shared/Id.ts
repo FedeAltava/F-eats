@@ -1,28 +1,32 @@
+
 import { v4 as uuidv4 } from 'uuid';
+import { ValueObject } from './value-object';
 
-export class Id {
-    private readonly _id: string;
+interface IdProps {
+    value: string;
+}
 
-    constructor(value: string){
-        this._id = value;
+export class Id extends ValueObject<IdProps> {
+    private constructor(props: IdProps) {
+        super(props);
     }
 
-    get value(): string{
-        return this._id;
+    get value(): string {
+        return this.props.value;
     }
+
 
     public static generate(): Id {
-        return new Id (uuidv4());
+        return new Id({ value: uuidv4() });
     }
 
-    public static create(id:string): Id {
-        return new Id(id);
-    }
 
-    equals(id?:Id): boolean {
-        if( id === null || id === undefined){
-            return false;
+    public static create(id: string): Id {
+        if (!id) {
+            throw new Error("Id is required");
         }
-        return this._id === id._id
+
+
+        return new Id({ value: id });
     }
 }
