@@ -19,6 +19,12 @@ interface UserData{
     password:string,
 }
 
+export interface userUpdateData {
+    name?: string;
+    email?: string;
+    password?: string;
+  }
+
 export class User extends Entity{
     public readonly name: Name;
     public readonly email: Email;
@@ -37,6 +43,31 @@ export class User extends Entity{
         const name = Name.create(data.name)
         const email = Email.create(data.email)
         const password = Password.create(data.password)
-        return new User({   id, name, email, password });
+        return new User({ id, name, email, password });
     }
+
+    public  update(data: userUpdateData): User {
+        const name = !data.name ? this.name : Name.create(data.name);
+        const email = !data.email ? this.email : Email.create(data.email);
+        const password = !data.password ? this.password :  Password.create(data.password);
+        return new User({id:this.id, name, email, password });
+    } 
+
+    public toJSON() {
+        return {
+            id: this.id.value,
+            name: this.name.value,
+            email: this.email.value
+        }
+    }
+    
+    public toPersistence() {
+        return {
+            id: this.id.value,
+            name: this.name.value,
+            email: this.email.value,
+            password: this.password.value
+        }
+    }
+    
 }
