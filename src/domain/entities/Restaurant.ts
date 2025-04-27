@@ -99,9 +99,20 @@ export class Restaurant extends Entity {
         category: this.category.value,
         rating: this.rating.value,
         imageUrl: this.imageUrl.value
-        // No incluyes password ni menú por ahora
+        // No incluye menú por ahora
       };
     }
-    
-    
+
+    public toPersistence() {
+      return {
+        id: this.id.value,
+        name: this.name.value,
+        email: this.email.value,
+        password: this.password.value,
+        category: this.category.value,
+        rating: this.rating.value,
+        imageUrl: this.imageUrl.value
+        // No incluye menú por ahora
+      }
+  }
 }
