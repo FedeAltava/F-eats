@@ -5,7 +5,7 @@ import { Id } from "../value-objects/shared/Id";
 import { Email } from '../value-objects/Email';
 import { Password } from '../value-objects/Password';
 
-interface UserOjectData{
+interface UserObjectData{
     id:Id,
     name:Name,
     email:Email,
@@ -30,7 +30,7 @@ export class User extends Entity{
     public readonly email: Email;
     public readonly password: Password;
 
-    private constructor(data:UserOjectData){
+    private constructor(data:UserObjectData){
         super(data.id);
         this.id = data.id; 
         this.name = data.name;
