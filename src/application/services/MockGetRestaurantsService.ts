@@ -1,4 +1,4 @@
-import { GetRestaurantsUseCase } from "../../domain/usecases/GetRestaurantsUseCase";
+/* import { GetRestaurantsUseCase } from "../../domain/usecases/GetRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
 
 export class MockGetRestaurantsService implements GetRestaurantsUseCase {
@@ -23,3 +23,4 @@ export class MockGetRestaurantsService implements GetRestaurantsUseCase {
     ];
   }
 }
+ */

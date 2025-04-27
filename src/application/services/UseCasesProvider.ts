@@ -1,4 +1,4 @@
-import { MockGetRestaurantsService } from "./MockGetRestaurantsService";
+/* import { MockGetRestaurantsService } from "./MockGetRestaurantsService";
 import { GetRestaurantsUseCase } from "../../domain/usecases/GetRestaurantsUseCase";
 
 class UseCasesProvider {
@@ -7,4 +7,4 @@ class UseCasesProvider {
   }
 }
 
-export default UseCasesProvider;
+export default UseCasesProvider; */
