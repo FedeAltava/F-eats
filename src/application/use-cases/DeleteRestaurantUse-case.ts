@@ -1,5 +1,5 @@
 import { Restaurant } from '../../domain/entities/Restaurant';
-import { ErrorDeletingResturant } from '../../shared/errors/errors';
+import { ErrorDeletingRestaurant } from '../../shared/errors/errors';
 import { RestaurantRepository } from '../repositories/RestaurantRepository';
 
 
@@ -10,12 +10,12 @@ export class  DeleteRestaurant{
         try{
             const restaurantExists = await this.restaurantRepository.getById(restaurant.id.value);
             if (!restaurantExists) {
-                throw new ErrorDeletingResturant();
+                throw new ErrorDeletingRestaurant();
             }
             await this.restaurantRepository.delete(restaurant.id)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }catch(error){
-            throw new ErrorDeletingResturant;
+            throw new ErrorDeletingRestaurant();
         }
     }
 }

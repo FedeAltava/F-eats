@@ -40,7 +40,7 @@ export class ErrorListingRestaurants extends Error {
   }
 }
 
-export class ErrorDeletingResturant extends Error {
+export class ErrorDeletingRestaurant extends Error {
   constructor() {
     super("Error deleting Resturant");
     this.name = "ErrorDeletingResturant";
