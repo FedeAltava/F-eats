@@ -5,6 +5,7 @@ import { ErrorCreatingRestaurant, RestaurantAlreadyExistsError } from '../../sha
 
 export class CreateRestaurant {
     constructor(private restaurantRepository: RestaurantRepository){}
+    
     async execute(restaurant:Restaurant):Promise<void>{
 
         try{

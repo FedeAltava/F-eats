@@ -32,3 +32,17 @@ export class ErrorCreatingRestaurant extends Error {
         this.name = "ErrorCreatingRestaurant";
     }
 }
+
+export class ErrorListingRestaurants extends Error {
+  constructor() {
+      super("Error Listing restaurants");
+      this.name = "ErrorListingRestaurants";
+  }
+}
+
+export class ErrorDeletingResturant extends Error {
+  constructor() {
+    super("Error deleting Resturant");
+    this.name = "ErrorDeletingResturant";
+  }
+}
