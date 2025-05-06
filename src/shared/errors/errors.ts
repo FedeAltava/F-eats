@@ -46,3 +46,10 @@ export class ErrorDeletingRestaurant extends Error {
     this.name = "ErrorDeletingResturant";
   }
 }
+
+export class ErrorUpdatingRestaurant extends Error {
+  constructor() {
+    super("Error updating restaurant");
+    this.name = "ErrorUpdatingRestaurant";
+  }
+}
