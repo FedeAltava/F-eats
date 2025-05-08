@@ -61,3 +61,16 @@ export class UserNotFoundError extends Error {
   }
 }
 
+export class ErrorListingUsers extends Error {
+  constructor() {
+    super("Error listing users");
+    this.name = "ErrorListingUsers";
+  }
+}
+
+export class ErrorUpdatingUser extends Error {
+  constructor() {
+    super("Error updating user");
+    this.name = "ErrorUpdatingUser";
+  }
+}
