@@ -1,6 +1,6 @@
-import { RestaurantRepository } from '../repositories/RestaurantRepository';
-import { RestaurantUpdateData } from '../../domain/entities/Restaurant';
-import { ErrorUpdatingRestaurant } from '../../shared/errors/errors';
+import { RestaurantRepository } from '../../repositories/RestaurantRepository';
+import { RestaurantUpdateData } from '../../../domain/entities/Restaurant';
+import { ErrorUpdatingRestaurant } from '../../../shared/errors/errors';
 
 export class UpdateRestaurant {
   constructor(private restaurantRepository: RestaurantRepository) {}

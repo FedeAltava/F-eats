@@ -1,6 +1,6 @@
-import { RestaurantRepository } from '../repositories/RestaurantRepository';
-import { Restaurant } from '../../domain/entities/Restaurant';
-import { ErrorCreatingRestaurant, RestaurantAlreadyExistsError } from '../../shared/errors/errors';
+import { RestaurantRepository } from '../../repositories/RestaurantRepository';
+import { Restaurant } from '../../../domain/entities/Restaurant';
+import { ErrorCreatingRestaurant, RestaurantAlreadyExistsError } from '../../../shared/errors/errors';
 
 
 export class CreateRestaurant {

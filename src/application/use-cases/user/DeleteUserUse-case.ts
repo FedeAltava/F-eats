@@ -1,6 +1,6 @@
-import { User } from "../../domain/entities/User";
-import { ErrorDeletingUser, UserNotFoundError } from "../../shared/errors/errors";
-import { UserRepository } from "../repositories/UserRepository";
+import { User } from "../../../domain/entities/User";
+import { ErrorDeletingUser, UserNotFoundError } from "../../../shared/errors/errors";
+import { UserRepository } from "../../repositories/UserRepository";
 
 
 export class DeleteUser{

@@ -1,6 +1,6 @@
-import { Restaurant } from '../../domain/entities/Restaurant';
-import { ErrorDeletingRestaurant } from '../../shared/errors/errors';
-import { RestaurantRepository } from '../repositories/RestaurantRepository';
+import { Restaurant } from '../../../domain/entities/Restaurant';
+import { ErrorDeletingRestaurant } from '../../../shared/errors/errors';
+import { RestaurantRepository } from '../../repositories/RestaurantRepository';
 
 
 export class  DeleteRestaurant{

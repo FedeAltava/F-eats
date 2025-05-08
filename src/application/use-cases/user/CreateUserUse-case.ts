@@ -1,6 +1,6 @@
-import { User } from "../../domain/entities/User";
-import { ErrorCreatingUser, UserAlreadyExistsError } from "../../shared/errors/errors";
-import { UserRepository } from "../repositories/UserRepository";
+import { User } from "../../../domain/entities/User";
+import { ErrorCreatingUser, UserAlreadyExistsError } from "../../../shared/errors/errors";
+import { UserRepository } from "../../repositories/UserRepository";
 
 
 export class CreateUser{
