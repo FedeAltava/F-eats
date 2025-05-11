@@ -7,7 +7,7 @@ export interface RestaurantRepository {
     delete(id: Id): Promise<void>;
     list(): Promise<Restaurant[]>;
     getByName(name: string): Promise<Restaurant[]>;
-    getByEmail(email: string): Promise <Restaurant>;
-    getById(id: string): Promise <Restaurant>;
+    getByEmail(email: string): Promise <Restaurant | null>;
+    getById(id: string): Promise <Restaurant | null>;
     getByCategory(category: string): Promise<Restaurant[]>;
 }
