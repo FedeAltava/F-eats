@@ -14,7 +14,7 @@ export class CreateRestaurant {
                 throw new RestaurantAlreadyExistsError();
             }
 
-            await this.restaurantRepository.save(restaurant);
+            await this.restaurantRepository.create(restaurant);
 
         }catch(error){;
             if( error instanceof RestaurantAlreadyExistsError){

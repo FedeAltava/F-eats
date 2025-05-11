@@ -12,7 +12,7 @@ export class UpdateUSer {
             throw new ErrorUpdatingUser();
         }
       const updated = user.update(data)
-      await this.userRepository.save(updated);
+      await this.userRepository.update(updated);
     } catch (error) {
       if (error instanceof ErrorUpdatingUser) {
         throw error;

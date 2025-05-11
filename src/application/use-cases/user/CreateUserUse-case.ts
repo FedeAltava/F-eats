@@ -12,7 +12,7 @@ export class CreateUser{
             if(userExists){
                 throw new UserAlreadyExistsError();
             }
-            await this.userRepository.save(user);
+            await this.userRepository.create(user);
         }catch(error){
             if(error instanceof UserAlreadyExistsError){
                 throw new UserAlreadyExistsError();

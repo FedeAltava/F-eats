@@ -14,7 +14,7 @@ export class UpdateRestaurant {
       }
 
       const updated = restaurant.update(data);
-      await this.restaurantRepository.save(updated);
+      await this.restaurantRepository.update(updated);
 
     } catch (error) {
       if (error instanceof ErrorUpdatingRestaurant) throw error;

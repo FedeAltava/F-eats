@@ -74,3 +74,38 @@ export class ErrorUpdatingUser extends Error {
     this.name = "ErrorUpdatingUser";
   }
 }
+
+export class ErrorCreatingDish extends Error {
+  constructor() {
+    super("Error creating dish");
+    this.name = "ErrorCreatingDish";
+  }
+}
+
+export class ErrorUpdatingDish extends Error {
+  constructor() {
+    super("Error updating dish");
+    this.name = "ErrorUpdatingDish";
+  }
+}
+
+export class ErrorDeletingDish extends Error {
+  constructor() {
+    super("Error deleting dish");
+    this.name = "ErrorDeletingDish";
+  }
+}
+
+export class DishNotFoundError extends Error {
+  constructor() {
+    super("Dish not found");
+    this.name = "DishNotFoundError";
+  }
+}
+
+export class ErrorListingDishes extends Error {
+  constructor() {
+    super("Error listing dishes");
+    this.name = "ErrorListingDishes";
+  }
+}
