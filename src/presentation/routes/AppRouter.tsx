@@ -1,17 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "../pages/HomePage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { RegisterUser } from "../pages/RegisterUser";
 
-const AppRouter = () => {
+
+export const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/home" element={<HomePage />} />
-        
-        {/* Redirección por defecto */}
-        <Route path="*" element={<Navigate to="/home" />} />
+        <Route path="/register" element={<RegisterUser />} />
       </Routes>
     </Router>
   );
 };
-
-export default AppRouter;
