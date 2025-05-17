@@ -8,10 +8,10 @@ import {
   CardActions,
   Button,
   CircularProgress,
-  Box
+  Box,
 } from "@mui/material";
 
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 
 import { FirebaseRestaurantRepository } from "../../infrastructure/firebase/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
@@ -30,7 +30,7 @@ export const Home = () => {
         const useCase = new ListRestaurantsUseCase(repo);
         const list = await useCase.execute();
         setRestaurants(list);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError("Error listing restaurants");
       } finally {
@@ -66,8 +66,17 @@ export const Home = () => {
 
       <Grid container spacing={4}>
         {restaurants.map((r) => (
-          <Grid size={{xs:12, sm:6, md:4}} key={r.id.value}>
-            <Card>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={r.id.value}>
+            <Card
+              sx={{
+                cursor: "pointer",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow: 6,
+                },
+              }}
+            >
               {r.imageUrl.value && (
                 <CardMedia
                   component="img"
