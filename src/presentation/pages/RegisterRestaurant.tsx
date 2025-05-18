@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import { FirebaseRestaurantRepository } from "../../infrastructure/firebase/FirebaseRestaurantRepository";
+import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { CreateRestaurant } from "../../application/use-cases/restaurant/CreateRestaurantUse-case";
 import { Restaurant } from "../../domain/entities/Restaurant";
 

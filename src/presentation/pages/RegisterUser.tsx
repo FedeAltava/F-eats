@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import { FirebaseUserRepository } from "../../infrastructure/firebase/FirebaseUserRepository";
+import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository";
 import { CreateUser } from "../../application/use-cases/user/CreateUserUse-case";
 import { User } from "../../domain/entities/User";
 

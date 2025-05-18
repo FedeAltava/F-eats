@@ -13,7 +13,7 @@ import {
 
 import Grid from "@mui/material/Grid";
 
-import { FirebaseRestaurantRepository } from "../../infrastructure/firebase/FirebaseRestaurantRepository";
+import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
 import { Link } from "react-router-dom";
