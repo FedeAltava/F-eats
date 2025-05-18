@@ -3,8 +3,10 @@ import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { CreateRestaurant } from "../../application/use-cases/restaurant/CreateRestaurantUse-case";
 import { Restaurant } from "../../domain/entities/Restaurant";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterRestaurant = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +38,7 @@ export const RegisterRestaurant = () => {
       setCategory("");
       setRating(0);
       setImageUrl("");
+      navigate("/login-restaurant");
     } catch (error: unknown) {
       setFeedback(`❌ ${error}`);
     }

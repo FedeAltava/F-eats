@@ -1,17 +1,43 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { RegisterUser } from "../pages/RegisterUser";
-import { RegisterRestaurant } from "../pages/RegisterRestaurant";
+
 import { Home } from "../pages/Home";
 import { RestaurantDetails } from "../pages/RestaurantDetails";
+import { SignUpUser } from "../pages/SignUpUser";
+import { LoginUser } from "../pages/LoginUser";
+import { RegisterUser } from "../pages/RegisterUser";
+import { LoginRestaurant } from "../pages/LoginRestaurant";
+import { SignUpRestaurant } from "../pages/SignUpRestaurant";
+import { RegisterRestaurant } from "../pages/RegisterRestaurant";
+import { RegisterDish } from "../pages/RegisterDish";      // ← importa tu formulario de platos
+import { Cart } from "../pages/Cart";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRouter = () => {
   return (
     <Router>
       <Routes>
+        {/*Public routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+        <Route path="/login" element={<LoginUser />} />
+        <Route path="/signup" element={<SignUpUser />} />
         <Route path="/register" element={<RegisterUser />} />
-        <Route path="/register-restaurant" element={<RegisterRestaurant />} />
+        <Route path="/login-restaurant" element={<LoginRestaurant />} />
+        <Route path="/signup-restaurant" element={<SignUpRestaurant />} />
+        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+
+        {/* Just autenticated restaurans */}
+        <Route element={<ProtectedRoute allowedRole="restaurant" />}>
+          <Route path="/register-restaurant" element={<RegisterRestaurant />} />
+          <Route path="/restaurant/:id/add-dish" element={<RegisterDish />} />
+        </Route>
+
+        {/* Just autenticated Users */}
+        <Route element={<ProtectedRoute allowedRole="user" />}>
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+
+        {/* Fallback 404 */}
+        <Route path="*" element={<h1>404 - Not Found</h1>} />
       </Routes>
     </Router>
   );

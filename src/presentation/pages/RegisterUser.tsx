@@ -3,8 +3,10 @@ import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository";
 import { CreateUser } from "../../application/use-cases/user/CreateUserUse-case";
 import { User } from "../../domain/entities/User";
+import { useNavigate } from "react-router-dom";  
 
 export const RegisterUser = () => {
+  const navigate = useNavigate(); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +22,7 @@ export const RegisterUser = () => {
       setName("");
       setEmail("");
       setPassword("");
+      navigate("/login");
     } catch (error) {
       setFeedback(`❌ ${error}`);
     }
