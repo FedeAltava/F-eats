@@ -11,10 +11,12 @@ import { RegisterRestaurant } from "../pages/RegisterRestaurant";
 import { RegisterDish } from "../pages/RegisterDish";      // ← importa tu formulario de platos
 import { Cart } from "../pages/Cart";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { NavBar } from "../components/NavBar";
 
 export const AppRouter = () => {
   return (
     <Router>
+      <NavBar />
       <Routes>
         {/*Public routes */}
         <Route path="/" element={<Home />} />

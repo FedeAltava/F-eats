@@ -16,13 +16,15 @@ import Grid from "@mui/material/Grid";
 import { FirebaseDishRepository } from "../../infrastructure/repositories/FirebaseDishRepository";
 import { ListDishesByRestaurant } from "../../application/use-cases/dish/ListDishesByRestaurant";
 import { Dish } from "../../domain/entities/Dish";
+import { useCartStore } from "../store/useCartStore";
 
 export const RestaurantDetails = () => {
   const { id: restaurantId } = useParams<{ id: string }>();
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-
+  const addDish = useCartStore(state => state.addDish); 
+  
   useEffect(() => {
     if (!restaurantId) return;
     const loadMenu = async () => {
@@ -93,7 +95,12 @@ export const RestaurantDetails = () => {
                 )}
               </CardContent>
               <CardActions>
-                <Button size="small">Add to Cart</Button>
+                <Button
+                  size="small"
+                  onClick={() => addDish(d)} 
+                >
+                  Add to Cart
+                </Button>
               </CardActions>
             </Card>
           </Grid>
