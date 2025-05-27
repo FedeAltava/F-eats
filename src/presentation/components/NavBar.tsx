@@ -15,17 +15,16 @@ export const NavBar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography 
-          variant="h6" 
-          component={Link} 
-          to="/" 
+        <Typography
+          variant="h6"
+          component={Link}
+          to="/"
           sx={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
         >
           F-eat
         </Typography>
 
         {name ? (
-          // Si hay sesión iniciada:
           <Box>
             <Typography component="span" sx={{ mr: 2 }}>
               Hello, {name}
@@ -33,16 +32,16 @@ export const NavBar = () => {
 
             {role === "restaurant" && (
               <>
-                <Button 
-                  color="inherit" 
-                  component={Link} 
+                <Button
+                  color="inherit"
+                  component={Link}
                   to={`/restaurant/${localStorage.getItem("uid")}/add-dish`}
                 >
                   Add Dish
                 </Button>
-                <Button 
-                  color="inherit" 
-                  component={Link} 
+                <Button
+                  color="inherit"
+                  component={Link}
                   to="/register-restaurant"
                 >
                   My Profile
@@ -51,9 +50,22 @@ export const NavBar = () => {
             )}
 
             {role === "user" && (
-              <Button color="inherit" component={Link} to="/cart">
-                Cart
-              </Button>
+              <>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/cart"
+                >
+                  Cart
+                </Button>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/profile"
+                >
+                  My Profile
+                </Button>
+              </>
             )}
 
             <Button color="inherit" onClick={handleLogout}>
@@ -61,16 +73,13 @@ export const NavBar = () => {
             </Button>
           </Box>
         ) : (
-          // Si NO hay sesión:
           <Box>
-            {/* Registro */}
             <Button color="inherit" component={Link} to="/signup">
               Sign Up (User)
             </Button>
             <Button color="inherit" component={Link} to="/signup-restaurant">
               Sign Up (Restaurant)
             </Button>
-            {/* Login */}
             <Button color="inherit" component={Link} to="/login">
               Login (User)
             </Button>

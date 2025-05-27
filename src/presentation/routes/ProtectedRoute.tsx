@@ -9,11 +9,7 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-/**
- * Comprueba el role del usuario (guardado en localStorage).
- * Si coincide con allowedRole, renderiza las rutas hijas (<Outlet />).
- * Si no, redirige a la ruta de login correspondiente.
- */
+
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRole,
   redirectTo

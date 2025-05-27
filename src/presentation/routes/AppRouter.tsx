@@ -7,11 +7,12 @@ import { LoginUser } from "../pages/LoginUser";
 import { RegisterUser } from "../pages/RegisterUser";
 import { LoginRestaurant } from "../pages/LoginRestaurant";
 import { SignUpRestaurant } from "../pages/SignUpRestaurant";
-import { RegisterRestaurant } from "../pages/RegisterRestaurant";
+import { ProfileRestaurant } from "../pages/ProfileRestaurant";
 import { RegisterDish } from "../pages/RegisterDish";      // ← importa tu formulario de platos
 import { Cart } from "../pages/Cart";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { NavBar } from "../components/NavBar";
+import { ProfileUser } from "../pages/ProfileUser";
 
 export const AppRouter = () => {
   return (
@@ -29,13 +30,14 @@ export const AppRouter = () => {
 
         {/* Just autenticated restaurans */}
         <Route element={<ProtectedRoute allowedRole="restaurant" />}>
-          <Route path="/register-restaurant" element={<RegisterRestaurant />} />
+          <Route path="/register-restaurant" element={<ProfileRestaurant />} />
           <Route path="/restaurant/:id/add-dish" element={<RegisterDish />} />
         </Route>
 
         {/* Just autenticated Users */}
         <Route element={<ProtectedRoute allowedRole="user" />}>
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<ProfileUser />} />
         </Route>
 
         {/* Fallback 404 */}

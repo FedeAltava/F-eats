@@ -16,14 +16,22 @@ import Grid from "@mui/material/Grid";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Home = () => {
+  const navigate = useNavigate();
+  const role = localStorage.getItem("role");
+  const uid = localStorage.getItem("uid");
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
+    if (role === "restaurant" && uid) {
+      navigate(`/register-restaurant`);
+      return;
+    }
+
     const load = async () => {
       try {
         const repo = new FirebaseRestaurantRepository();
@@ -38,6 +46,7 @@ export const Home = () => {
       }
     };
     load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

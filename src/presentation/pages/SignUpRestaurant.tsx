@@ -58,8 +58,9 @@ export const SignUpRestaurant = () => {
 
       // 4️⃣ Redirigir al login de restaurante
       navigate("/login-restaurant");
-    } catch (err: any) {
-      setError(err.message || "Failed to sign up restaurant");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err: unknown) {
+      setError("Failed to sign up restaurant");
     } finally {
       setLoading(false);
     }
