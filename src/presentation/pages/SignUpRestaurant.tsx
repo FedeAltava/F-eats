@@ -2,28 +2,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Container, Typography, Box,
-  TextField, Button, Alert
+  Container,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Alert,
 } from "@mui/material";
 
 import { FirebaseAuthRepository } from "../../infrastructure/repositories/FirebaseAuthRepository";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
-import { SignUpUseCase }    from "../../application/use-cases/auth/SignUpUseCase";
+import { SignUpUseCase } from "../../application/use-cases/auth/SignUpUseCase";
 import { CreateRestaurant } from "../../application/use-cases/restaurant/CreateRestaurantUse-case";
-import { Restaurant }       from "../../domain/entities/Restaurant";
+import { Restaurant } from "../../domain/entities/Restaurant";
 
 export const SignUpRestaurant = () => {
   const navigate = useNavigate();
-  const [name, setName]         = useState("");
-  const [email, setEmail]       = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm]   = useState("");
+  const [confirm, setConfirm] = useState("");
   const [category, setCategory] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [rating, setRating]     = useState<number>(0);
+  const [rating, setRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState("");
-  const [error, setError]       = useState<string|null>(null);
-  const [loading, setLoading]   = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (password !== confirm) {
@@ -32,11 +36,9 @@ export const SignUpRestaurant = () => {
     }
     setLoading(true);
     try {
-
       const authRepo = new FirebaseAuthRepository();
       const signUpUC = new SignUpUseCase(authRepo);
       const uid = await signUpUC.execute(email, password, "restaurant");
-
 
       const restaurantEntity = Restaurant.create({
         id: uid,
@@ -46,7 +48,7 @@ export const SignUpRestaurant = () => {
         category,
         rating,
         imageUrl,
-        menu: []
+        menu: [],
       });
       const restRepo = new FirebaseRestaurantRepository();
       const createRest = new CreateRestaurant(restRepo);
@@ -57,9 +59,8 @@ export const SignUpRestaurant = () => {
       localStorage.setItem("role", "restaurant");
       localStorage.setItem("name", name);
 
-
       navigate("/login-restaurant");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: unknown) {
       setError("Failed to sign up restaurant");
     } finally {
@@ -75,20 +76,48 @@ export const SignUpRestaurant = () => {
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}
 
-        <TextField label="Name"        value={name}     onChange={e => setName(e.target.value)}        fullWidth />
-        <TextField label="Email"       value={email}    onChange={e => setEmail(e.target.value)}      fullWidth />
-        <TextField label="Password"    type="password" value={password} onChange={e => setPassword(e.target.value)} fullWidth />
-        <TextField label="Confirm PW"  type="password" value={confirm}  onChange={e => setConfirm(e.target.value)}  fullWidth />
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          label="Confirm PW"
+          type="password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          fullWidth
+        />
 
-        <TextField label="Category"    value={category} onChange={e => setCategory(e.target.value)}   fullWidth />
+        <TextField
+          label="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          fullWidth
+        />
 
-        <TextField label="Image URL"   value={imageUrl} onChange={e => setImageUrl(e.target.value)} fullWidth />
+        <TextField
+          label="Image URL"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          fullWidth
+        />
 
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
+        <Button variant="contained" onClick={handleSubmit} disabled={loading}>
           {loading ? "Signing Up…" : "Sign Up as Restaurant"}
         </Button>
       </Box>

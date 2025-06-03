@@ -14,6 +14,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { NavBar } from "../components/NavBar";
 import { ProfileUser } from "../pages/ProfileUser";
 import { ManageDishes } from "../pages/ManageDishes";
+import { Checkout } from "../pages/Checkout";
 
 export const AppRouter = () => {
   return (
@@ -40,6 +41,7 @@ export const AppRouter = () => {
         <Route element={<ProtectedRoute allowedRole="user" />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<ProfileUser />} />
+           <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         {/* Fallback 404 */}
