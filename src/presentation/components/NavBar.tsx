@@ -35,9 +35,11 @@ export const NavBar = () => {
                 <Button
                   color="inherit"
                   component={Link}
-                  to={`/restaurant/${localStorage.getItem("uid")}/add-dish`}
+                  to={`/restaurant/${localStorage.getItem(
+                    "uid"
+                  )}/manage-dishes`}
                 >
-                  Add Dish
+                  My Dishes
                 </Button>
                 <Button
                   color="inherit"
@@ -51,18 +53,10 @@ export const NavBar = () => {
 
             {role === "user" && (
               <>
-                <Button
-                  color="inherit"
-                  component={Link}
-                  to="/cart"
-                >
+                <Button color="inherit" component={Link} to="/cart">
                   Cart
                 </Button>
-                <Button
-                  color="inherit"
-                  component={Link}
-                  to="/profile"
-                >
+                <Button color="inherit" component={Link} to="/profile">
                   My Profile
                 </Button>
               </>

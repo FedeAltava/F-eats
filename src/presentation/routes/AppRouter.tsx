@@ -13,6 +13,7 @@ import { Cart } from "../pages/Cart";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { NavBar } from "../components/NavBar";
 import { ProfileUser } from "../pages/ProfileUser";
+import { ManageDishes } from "../pages/ManageDishes";
 
 export const AppRouter = () => {
   return (
@@ -31,6 +32,7 @@ export const AppRouter = () => {
         {/* Just autenticated restaurans */}
         <Route element={<ProtectedRoute allowedRole="restaurant" />}>
           <Route path="/register-restaurant" element={<ProfileRestaurant />} />
+          <Route path="/restaurant/:id/manage-dishes" element={<ManageDishes />} />
           <Route path="/restaurant/:id/add-dish" element={<RegisterDish />} />
         </Route>
 

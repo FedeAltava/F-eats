@@ -106,14 +106,6 @@ export const ProfileRestaurant = () => {
           fullWidth
         />
         <TextField label="Category"    value={category} onChange={e => setCategory(e.target.value)}   fullWidth />
-        <TextField
-          label="Rating"
-          type="number"
-          inputProps={{ min: 0, max: 5, step: 0.1 }}
-          value={rating}
-          onChange={e => setRating(+e.target.value)}
-          fullWidth
-        />
         <TextField label="Image URL"   value={imageUrl} onChange={e => setImageUrl(e.target.value)} fullWidth />
 
         <Button

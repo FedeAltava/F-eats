@@ -19,6 +19,7 @@ export const SignUpRestaurant = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm]   = useState("");
   const [category, setCategory] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [rating, setRating]     = useState<number>(0);
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError]       = useState<string|null>(null);
@@ -31,12 +32,12 @@ export const SignUpRestaurant = () => {
     }
     setLoading(true);
     try {
-      // 1️⃣ Registro en Firebase Auth
+
       const authRepo = new FirebaseAuthRepository();
       const signUpUC = new SignUpUseCase(authRepo);
       const uid = await signUpUC.execute(email, password, "restaurant");
 
-      // 2️⃣ Creación y persistencia de la entidad Restaurant
+
       const restaurantEntity = Restaurant.create({
         id: uid,
         name,
@@ -56,7 +57,7 @@ export const SignUpRestaurant = () => {
       localStorage.setItem("role", "restaurant");
       localStorage.setItem("name", name);
 
-      // 4️⃣ Redirigir al login de restaurante
+
       navigate("/login-restaurant");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: unknown) {
@@ -80,14 +81,7 @@ export const SignUpRestaurant = () => {
         <TextField label="Confirm PW"  type="password" value={confirm}  onChange={e => setConfirm(e.target.value)}  fullWidth />
 
         <TextField label="Category"    value={category} onChange={e => setCategory(e.target.value)}   fullWidth />
-        <TextField
-          label="Rating"
-          type="number"
-          inputProps={{ min: 0, max: 5, step: 0.1 }}
-          value={rating}
-          onChange={e => setRating(+e.target.value)}
-          fullWidth
-        />
+
         <TextField label="Image URL"   value={imageUrl} onChange={e => setImageUrl(e.target.value)} fullWidth />
 
         <Button

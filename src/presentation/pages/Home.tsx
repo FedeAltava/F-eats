@@ -99,9 +99,6 @@ export const Home = () => {
                 <Typography variant="body2" color="text.secondary">
                   Category: {r.category.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Rating: {r.rating.value.toFixed(1)}
-                </Typography>
               </CardContent>
               <CardActions>
                 <Button
