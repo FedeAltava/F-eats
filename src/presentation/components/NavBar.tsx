@@ -48,6 +48,9 @@ export const NavBar = () => {
                 >
                   My Profile
                 </Button>
+                <Button color="inherit" component={Link} to="/orders-received">
+                  Orders Received
+                </Button>
               </>
             )}
 
@@ -58,6 +61,9 @@ export const NavBar = () => {
                 </Button>
                 <Button color="inherit" component={Link} to="/profile">
                   My Profile
+                </Button>
+                <Button color="inherit" component={Link} to="/my-orders">
+                  My Orders
                 </Button>
               </>
             )}

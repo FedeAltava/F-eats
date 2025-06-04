@@ -15,6 +15,8 @@ import { NavBar } from "../components/NavBar";
 import { ProfileUser } from "../pages/ProfileUser";
 import { ManageDishes } from "../pages/ManageDishes";
 import { Checkout } from "../pages/Checkout";
+import { MyOrders } from "../pages/MyOrders";
+import { RestaurantOrders } from "../pages/RestaurantOrders";
 
 export const AppRouter = () => {
   return (
@@ -35,6 +37,7 @@ export const AppRouter = () => {
           <Route path="/register-restaurant" element={<ProfileRestaurant />} />
           <Route path="/restaurant/:id/manage-dishes" element={<ManageDishes />} />
           <Route path="/restaurant/:id/add-dish" element={<RegisterDish />} />
+          <Route path="/orders-received" element={<RestaurantOrders />} />
         </Route>
 
         {/* Just autenticated Users */}
@@ -42,6 +45,7 @@ export const AppRouter = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<ProfileUser />} />
            <Route path="/checkout" element={<Checkout />} />
+           <Route path="/my-orders" element={<MyOrders />} />
         </Route>
 
         {/* Fallback 404 */}

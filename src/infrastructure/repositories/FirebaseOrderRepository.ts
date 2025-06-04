@@ -1,7 +1,6 @@
-// src/infrastructure/repositories/firebase/FirebaseOrderRepository.ts
+// src/infrastructure/repositories/FirebaseOrderRepository.ts
 import { OrderRepository } from "../../application/repositories/OrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
-import { Id } from "../../domain/value-objects/shared/Id";
 import { db } from "../firebase/fireBaseConfig";
 import {
   collection,
@@ -28,7 +27,6 @@ export class FirebaseOrderRepository implements OrderRepository {
 
     return snapshot.docs.map((docSnap) => {
       const data = docSnap.data();
-      // Reconstruir Array de OrderItem
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const items = (data.items as any[]).map((i) =>
         OrderItem.create({
@@ -38,12 +36,47 @@ export class FirebaseOrderRepository implements OrderRepository {
         })
       );
 
-      // Mantener id y createdAt original en lugar de generar uno nuevo
-      return new Order({
-        id: Id.create(docSnap.id),
+      return Order.reconstruct({
+        id: docSnap.id,
         userId: data.userId,
         restaurantId: data.restaurantId,
-        items,
+        items: items.map((vo) => ({
+          dishId: vo.dishId,
+          quantity: vo.quantity,
+          price: vo.price,
+        })),
+        total: data.total,
+        createdAt: Timestamp.fromDate(new Date(data.createdAt)).toDate(),
+      });
+    });
+  }
+
+  // ─── Nuevo método para listar por restaurantId ───
+  async listByRestaurant(restaurantId: string): Promise<Order[]> {
+    const ordersRef = collection(db, COLLECTION_NAME);
+    const q = query(ordersRef, where("restaurantId", "==", restaurantId));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((docSnap) => {
+      const data = docSnap.data();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const items = (data.items as any[]).map((i) =>
+        OrderItem.create({
+          dishId: i.dishId,
+          quantity: i.quantity,
+          price: i.price,
+        })
+      );
+
+      return Order.reconstruct({
+        id: docSnap.id,
+        userId: data.userId,
+        restaurantId: data.restaurantId,
+        items: items.map((vo) => ({
+          dishId: vo.dishId,
+          quantity: vo.quantity,
+          price: vo.price,
+        })),
         total: data.total,
         createdAt: Timestamp.fromDate(new Date(data.createdAt)).toDate(),
       });

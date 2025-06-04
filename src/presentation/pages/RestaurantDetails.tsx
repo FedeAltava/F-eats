@@ -1,6 +1,6 @@
 // src/presentation/pages/RestaurantDetails.tsx
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -23,6 +23,7 @@ import { useCartStore } from "../store/useCartStore";
 
 export const RestaurantDetails: React.FC = () => {
   const { id: restaurantId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -78,6 +79,8 @@ export const RestaurantDetails: React.FC = () => {
     );
   }
 
+  const role = localStorage.getItem("role");
+
   return (
     <>
       <Container maxWidth="lg" sx={{ mt: 5 }}>
@@ -117,10 +120,12 @@ export const RestaurantDetails: React.FC = () => {
                   <Button
                     size="small"
                     onClick={() => {
-                      // 1️⃣ Añadimos el plato al carrito
-                      addDish(d);
-                      // 2️⃣ Abrimos el Snackbar para mostrar feedback
-                      setSnackOpen(true);
+                      if (role !== "user") {
+                        navigate("/login");
+                      } else {
+                        addDish(d);
+                        setSnackOpen(true);
+                      }
                     }}
                   >
                     Add to Cart
