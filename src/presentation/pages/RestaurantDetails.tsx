@@ -1,5 +1,5 @@
 // src/presentation/pages/RestaurantDetails.tsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
@@ -11,20 +11,38 @@ import {
   Button,
   CircularProgress,
   Box,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
+
 import { FirebaseDishRepository } from "../../infrastructure/repositories/FirebaseDishRepository";
 import { ListDishesByRestaurant } from "../../application/use-cases/dish/ListDishesByRestaurant";
 import { Dish } from "../../domain/entities/Dish";
 import { useCartStore } from "../store/useCartStore";
 
-export const RestaurantDetails = () => {
+export const RestaurantDetails: React.FC = () => {
   const { id: restaurantId } = useParams<{ id: string }>();
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const addDish = useCartStore(state => state.addDish); 
-  
+
+  // Estado para controlar el Snackbar
+  const [snackOpen, setSnackOpen] = useState(false);
+
+  // Función para cerrar el Snackbar
+  const handleSnackClose = (
+    _: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackOpen(false);
+  };
+
+  const addDish = useCartStore((state) => state.addDish);
+
   useEffect(() => {
     if (!restaurantId) return;
     const loadMenu = async () => {
@@ -61,51 +79,74 @@ export const RestaurantDetails = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Menu
-      </Typography>
+    <>
+      <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Menu
+        </Typography>
 
-      <Grid container spacing={4}>
-        {dishes.map((d) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={d.id.value}>
-            <Card
-              sx={{
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
-              }}
-            >
-              {d.imageUrl?.value && (
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={d.imageUrl.value}
-                  alt={d.name.value}
-                />
-              )}
-              <CardContent>
-                <Typography variant="h6">{d.name.value}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ${d.price.value.toFixed(2)}
-                </Typography>
-                {d.description?.value && (
-                  <Typography variant="body2">
-                    {d.description.value}
-                  </Typography>
+        <Grid container spacing={4}>
+          {dishes.map((d) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={d.id.value}>
+              <Card
+                sx={{
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
+                }}
+              >
+                {d.imageUrl?.value && (
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={d.imageUrl.value}
+                    alt={d.name.value}
+                  />
                 )}
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  onClick={() => addDish(d)} 
-                >
-                  Add to Cart
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+                <CardContent>
+                  <Typography variant="h6">{d.name.value}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    ${d.price.value.toFixed(2)}
+                  </Typography>
+                  {d.description?.value && (
+                    <Typography variant="body2">
+                      {d.description.value}
+                    </Typography>
+                  )}
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      // 1️⃣ Añadimos el plato al carrito
+                      addDish(d);
+                      // 2️⃣ Abrimos el Snackbar para mostrar feedback
+                      setSnackOpen(true);
+                    }}
+                  >
+                    Add to Cart
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Snackbar con Alert para “Product added” */}
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={2500}
+        onClose={handleSnackClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Product added to cart!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
