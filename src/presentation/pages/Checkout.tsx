@@ -1,45 +1,81 @@
 // src/presentation/pages/Checkout.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Container, Typography, List, ListItem,
-  ListItemText, Box, Button, Alert
+  Container,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Box,
+  Button,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useCartStore } from "../store/useCartStore";
+
 import { FirebaseOrderRepository } from "../../infrastructure/repositories/FirebaseOrderRepository";
 import { CreateOrder } from "../../application/use-cases/order/CreateOrderUse-case";
 import { Order } from "../../domain/entities/Order";
+import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 
-export const Checkout = () => {
+export const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const items = useCartStore(state => state.items);
-  const clearCart = useCartStore(state => state.clearCart);
+  const items = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
 
+  const [restaurantName, setRestaurantName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Si el carrito está vacío, redirigir a Home
-  React.useEffect(() => {
+  // 1️⃣ Redirigir si carrito está vacío
+  useEffect(() => {
     if (items.length === 0) {
       navigate("/");
+      return;
+    }
+
+    // 2️⃣ Traer nombre del restaurante (opcional, para mostrar en la cabecera)
+    const restaurantId = items[0]?.dish.restaurantId.value || "";
+    if (restaurantId) {
+      const loadName = async () => {
+        try {
+          const repoR = new FirebaseRestaurantRepository();
+          const rest = await repoR.getById(restaurantId);
+          setRestaurantName(rest ? rest.name.value : "Unknown Restaurant");
+        } catch {
+          setRestaurantName("Unknown Restaurant");
+        }
+      };
+      loadName();
     }
   }, [items, navigate]);
 
-  // Calcular total
-  const total = items.reduce((sum, i) => sum + i.dish.price.value * i.quantity, 0);
-  // Suponemos que todos los platos son del mismo restaurante
+  // 3️⃣ Calcular total y restaurantId
+  const total = items.reduce(
+    (sum, i) => sum + i.dish.price.value * i.quantity,
+    0
+  );
   const restaurantId = items[0]?.dish.restaurantId.value || "";
 
   const handleConfirm = async () => {
     setError(null);
-    setLoading(true);
 
+    // Validar restaurantId
+    if (!restaurantId) {
+      setError("Could not determine restaurant. Please try again.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const userId = localStorage.getItem("uid");
-      if (!userId) throw new Error("User not authenticated");
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
 
-      // Construir la orden
+      // 4️⃣ Construir la orden
       const order = Order.create({
         userId,
         restaurantId,
@@ -50,13 +86,16 @@ export const Checkout = () => {
         })),
       });
 
+      // 5️⃣ Persistir en Firestore
       const repo = new FirebaseOrderRepository();
       const uc = new CreateOrder(repo);
       await uc.execute(order);
 
+      // 6️⃣ Vaciar carrito y mostrar success
       clearCart();
       setSuccess(true);
-      // Redirigir tras 1.5s a Home
+
+      // 7️⃣ Redirigir a Home tras 1.5s
       setTimeout(() => navigate("/"), 1500);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -68,16 +107,30 @@ export const Checkout = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Checkout
+      <Typography variant="h4" align="center">
+        Checkout {restaurantName && `– ${restaurantName}`}
       </Typography>
 
-      {error && <Alert severity="error">{error}</Alert>}
-      {success && <Alert severity="success">Order placed successfully!</Alert>}
+      {loading && (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CircularProgress />
+        </Box>
+      )}
 
-      <List>
+      {error && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" sx={{ mt: 2 }}>
+          Your order has been placed! Redirecting to Home…
+        </Alert>
+      )}
+
+      <List sx={{ mt: 2 }}>
         {items.map((i) => (
-          <ListItem key={i.dish.id.value}>
+          <ListItem key={i.dish.id.value} disablePadding>
             <ListItemText
               primary={`${i.dish.name.value} x${i.quantity}`}
               secondary={`$${(i.dish.price.value * i.quantity).toFixed(2)}`}
@@ -96,9 +149,9 @@ export const Checkout = () => {
           variant="contained"
           fullWidth
           onClick={handleConfirm}
-          disabled={loading}
+          disabled={loading || success}
         >
-          {loading ? "Placing Order…" : "Confirm Order"}
+          {loading ? "Placing Order…" : success ? "Order Placed!" : "Confirm Order"}
         </Button>
       </Box>
     </Container>

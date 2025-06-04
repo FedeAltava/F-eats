@@ -114,6 +114,7 @@ export const RestaurantOrders: React.FC = () => {
               <TableCell>Order Date</TableCell>
               <TableCell>User Name</TableCell>
 
+
               <TableCell align="right">Total ($)</TableCell>
             </TableRow>
           </TableHead>
