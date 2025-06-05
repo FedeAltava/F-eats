@@ -69,9 +69,21 @@ export const Home = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Restaurants
-      </Typography>
+<Typography
+  variant="h5"
+  component="h1"
+  align="center"
+  sx={{
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    mb: 2,
+    color: "text.primary",
+  }}
+>
+  Restaurants
+</Typography>
+
 
       <Grid container spacing={4}>
         {restaurants.map((r) => (

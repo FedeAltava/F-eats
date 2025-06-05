@@ -1,11 +1,39 @@
-// src/presentation/components/NavBar.tsx
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+
+import { useState, MouseEvent } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+
 
 export const NavBar = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const role = localStorage.getItem("role");
+
+  // Estados para controlar los menús desplegables
+  const [anchorSignUp, setAnchorSignUp] = useState<HTMLElement | null>(null);
+  const [anchorLogin, setAnchorLogin] = useState<HTMLElement | null>(null);
+
+  const handleOpenSignUp = (e: MouseEvent<HTMLButtonElement>) => {
+    setAnchorSignUp(e.currentTarget);
+  };
+  const handleCloseSignUp = () => {
+    setAnchorSignUp(null);
+  };
+
+  const handleOpenLogin = (e: MouseEvent<HTMLButtonElement>) => {
+    setAnchorLogin(e.currentTarget);
+  };
+  const handleCloseLogin = () => {
+    setAnchorLogin(null);
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -15,6 +43,7 @@ export const NavBar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
+        {/* Logo / Título */}
         <Typography
           variant="h6"
           component={Link}
@@ -25,6 +54,7 @@ export const NavBar = () => {
         </Typography>
 
         {name ? (
+          /* Si está logueado, mostramos saludo y opciones según rol */
           <Box>
             <Typography component="span" sx={{ mr: 2 }}>
               Hello, {name}
@@ -35,21 +65,23 @@ export const NavBar = () => {
                 <Button
                   color="inherit"
                   component={Link}
-                  to={`/restaurant/${localStorage.getItem(
-                    "uid"
-                  )}/manage-dishes`}
+                  to={`/restaurant/${localStorage.getItem("uid")}/add-dish`}
                 >
-                  My Dishes
+                  Add Dish
                 </Button>
                 <Button
                   color="inherit"
                   component={Link}
-                  to="/register-restaurant"
+                  to="/orders-received"
+                >
+                  Orders Received
+                </Button>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/profile-restaurant"
                 >
                   My Profile
-                </Button>
-                <Button color="inherit" component={Link} to="/orders-received">
-                  Orders Received
                 </Button>
               </>
             )}
@@ -59,11 +91,11 @@ export const NavBar = () => {
                 <Button color="inherit" component={Link} to="/cart">
                   Cart
                 </Button>
-                <Button color="inherit" component={Link} to="/profile">
-                  My Profile
-                </Button>
                 <Button color="inherit" component={Link} to="/my-orders">
                   My Orders
+                </Button>
+                <Button color="inherit" component={Link} to="/profile-user">
+                  My Profile
                 </Button>
               </>
             )}
@@ -73,19 +105,63 @@ export const NavBar = () => {
             </Button>
           </Box>
         ) : (
+          /* Si NO está logueado, mostramos DOS botones: Sign Up y Login */
           <Box>
-            <Button color="inherit" component={Link} to="/signup">
-              Sign Up (User)
+            {/* Botón “Sign Up” abre menú con dos opciones */}
+            <Button
+              color="inherit"
+              onClick={handleOpenSignUp}
+            >
+              Sign Up
             </Button>
-            <Button color="inherit" component={Link} to="/signup-restaurant">
-              Sign Up (Restaurant)
+            <Menu
+              anchorEl={anchorSignUp}
+              open={Boolean(anchorSignUp)}
+              onClose={handleCloseSignUp}
+            >
+              <MenuItem
+                component={Link}
+                to="/signup"
+                onClick={handleCloseSignUp}
+              >
+                As User
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/signup-restaurant"
+                onClick={handleCloseSignUp}
+              >
+                As Restaurant
+              </MenuItem>
+            </Menu>
+
+            {/* Botón “Login” abre menú con dos opciones */}
+            <Button
+              color="inherit"
+              onClick={handleOpenLogin}
+            >
+              Login
             </Button>
-            <Button color="inherit" component={Link} to="/login">
-              Login (User)
-            </Button>
-            <Button color="inherit" component={Link} to="/login-restaurant">
-              Login (Restaurant)
-            </Button>
+            <Menu
+              anchorEl={anchorLogin}
+              open={Boolean(anchorLogin)}
+              onClose={handleCloseLogin}
+            >
+              <MenuItem
+                component={Link}
+                to="/login"
+                onClick={handleCloseLogin}
+              >
+                As User
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/login-restaurant"
+                onClick={handleCloseLogin}
+              >
+                As Restaurant
+              </MenuItem>
+            </Menu>
           </Box>
         )}
       </Toolbar>

@@ -28,21 +28,16 @@ export const RestaurantDetails: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // Estado para controlar el Snackbar
   const [snackOpen, setSnackOpen] = useState(false);
+  const addDish = useCartStore((state) => state.addDish);
 
-  // Función para cerrar el Snackbar
   const handleSnackClose = (
     _: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === "clickaway") {
-      return;
-    }
+    if (reason === "clickaway") return;
     setSnackOpen(false);
   };
-
-  const addDish = useCartStore((state) => state.addDish);
 
   useEffect(() => {
     if (!restaurantId) return;
@@ -88,15 +83,24 @@ export const RestaurantDetails: React.FC = () => {
           Menu
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} alignItems="stretch">
           {dishes.map((d) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={d.id.value}>
               <Card
                 sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                  height: "100%",
+                  cursor: "pointer",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: 6,
+                  },
                 }}
               >
+                {/* Imagen del plato */}
                 {d.imageUrl?.value && (
                   <CardMedia
                     component="img"
@@ -105,17 +109,23 @@ export const RestaurantDetails: React.FC = () => {
                     alt={d.name.value}
                   />
                 )}
-                <CardContent>
-                  <Typography variant="h6">{d.name.value}</Typography>
-                  <Typography variant="body2" color="text.secondary">
+
+                {/* Contenido principal: título, descripción y precio */}
+                <CardContent sx={{ flexGrow: 1 }}>
+                  {/* flexGrow: 1 hace que este bloque ocupe todo el espacio sobrante */}
+                  <Typography variant="h6" gutterBottom>
+                    {d.name.value}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    {/* Si la descripción es corta o larga, el cuerpo siempre crece igual */}
+                    {d.description?.value || "No description available."}
+                  </Typography>
+                  <Typography variant="subtitle1">
                     ${d.price.value.toFixed(2)}
                   </Typography>
-                  {d.description?.value && (
-                    <Typography variant="body2">
-                      {d.description.value}
-                    </Typography>
-                  )}
                 </CardContent>
+
+                {/* Botón “Add to Cart”, siempre abajo de la tarjeta */}
                 <CardActions>
                   <Button
                     size="small"
@@ -137,7 +147,7 @@ export const RestaurantDetails: React.FC = () => {
         </Grid>
       </Container>
 
-      {/* Snackbar con Alert para “Product added” */}
+      {/* Snackbar para “Product added” */}
       <Snackbar
         open={snackOpen}
         autoHideDuration={2500}
