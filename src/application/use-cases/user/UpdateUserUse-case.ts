@@ -2,7 +2,7 @@ import { userUpdateData } from "../../../domain/entities/User";
 import { ErrorUpdatingUser } from "../../../shared/errors/errors";
 import { UserRepository } from "../../repositories/UserRepository";
 
-export class UpdateUSer {
+export class UpdateUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
   async execute(id: string, data: userUpdateData): Promise<void> {
