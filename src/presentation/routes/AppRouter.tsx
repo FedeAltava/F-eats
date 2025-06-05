@@ -34,7 +34,7 @@ export const AppRouter = () => {
 
         {/* Just autenticated restaurans */}
         <Route element={<ProtectedRoute allowedRole="restaurant" />}>
-          <Route path="/register-restaurant" element={<ProfileRestaurant />} />
+          <Route path="/profile-restaurant" element={<ProfileRestaurant />} />
           <Route path="/restaurant/:id/manage-dishes" element={<ManageDishes />} />
           <Route path="/restaurant/:id/add-dish" element={<RegisterDish />} />
           <Route path="/orders-received" element={<RestaurantOrders />} />

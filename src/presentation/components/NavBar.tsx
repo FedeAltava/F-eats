@@ -1,4 +1,4 @@
-
+// src/presentation/components/NavBar.tsx
 import { useState, MouseEvent } from "react";
 import {
   AppBar,
@@ -11,13 +11,12 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
-
 export const NavBar = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const role = localStorage.getItem("role");
 
-  // Estados para controlar los menús desplegables
+  // Estados para los menús de Sign Up / Login
   const [anchorSignUp, setAnchorSignUp] = useState<HTMLElement | null>(null);
   const [anchorLogin, setAnchorLogin] = useState<HTMLElement | null>(null);
 
@@ -40,14 +39,22 @@ export const NavBar = () => {
     navigate("/");
   };
 
+  // Definimos a dónde apunta el logo según el estado de sesión
+  const logoTo = (() => {
+    if (!name) return "/"; // no está logueado: Home público
+    if (role === "user") return "/"; 
+    if (role === "restaurant") return "/profile-restaurant";
+    return "/"; 
+  })();
+
   return (
     <AppBar position="static">
       <Toolbar>
-        {/* Logo / Título */}
+        {/* Logo / Título: aquí el 'to' es dinámico */}
         <Typography
           variant="h6"
           component={Link}
-          to="/"
+          to={logoTo}
           sx={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
         >
           F-eat
@@ -65,9 +72,9 @@ export const NavBar = () => {
                 <Button
                   color="inherit"
                   component={Link}
-                  to={`/restaurant/${localStorage.getItem("uid")}/add-dish`}
+                  to={`/restaurant/${localStorage.getItem("uid")}/manage-dishes`}
                 >
-                  Add Dish
+                  My Dishes
                 </Button>
                 <Button
                   color="inherit"
@@ -94,7 +101,7 @@ export const NavBar = () => {
                 <Button color="inherit" component={Link} to="/my-orders">
                   My Orders
                 </Button>
-                <Button color="inherit" component={Link} to="/profile-user">
+                <Button color="inherit" component={Link} to="/profile">
                   My Profile
                 </Button>
               </>
@@ -108,10 +115,7 @@ export const NavBar = () => {
           /* Si NO está logueado, mostramos DOS botones: Sign Up y Login */
           <Box>
             {/* Botón “Sign Up” abre menú con dos opciones */}
-            <Button
-              color="inherit"
-              onClick={handleOpenSignUp}
-            >
+            <Button color="inherit" onClick={handleOpenSignUp}>
               Sign Up
             </Button>
             <Menu
@@ -136,10 +140,7 @@ export const NavBar = () => {
             </Menu>
 
             {/* Botón “Login” abre menú con dos opciones */}
-            <Button
-              color="inherit"
-              onClick={handleOpenLogin}
-            >
+            <Button color="inherit" onClick={handleOpenLogin}>
               Login
             </Button>
             <Menu
