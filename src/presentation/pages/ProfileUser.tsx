@@ -1,29 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
-import { Container, Typography, Box, TextField, Button, Alert } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+
 import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository";
 import { UpdateUserUseCase } from "../../application/use-cases/user/UpdateUserUse-case";
 import { User } from "../../domain/entities/User";
 
-export const ProfileUser = () => {
+export const ProfileUser: React.FC = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
   const uid = localStorage.getItem("uid");
-  const [user, setUser]         = useState<User | null>(null);
-  const [name, setName]         = useState("");
-  const [email, setEmail]       = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError]       = useState<string | null>(null);
+
+  const [user, setUser] = useState<User | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [loading, setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     (async () => {
-      if (!uid) { navigate("/login"); return; }
+      if (!uid) {
+        navigate("/login");
+        return;
+      }
       const repo = new FirebaseUserRepository();
       const u = await repo.findById(uid);
-      if (!u) { navigate("/login"); return; }
+      if (!u) {
+        navigate("/login");
+        return;
+      }
       setUser(u);
       setName(u.name.value);
       setEmail(u.email.value);
@@ -31,36 +50,46 @@ export const ProfileUser = () => {
   }, [uid, navigate]);
 
 
-  const handleSubmit = async () => {
+  const handleChangeName = async () => {
     setError(null);
     setFeedback(null);
 
-
-    const data: { name?: string; email?: string; password?: string } = {};
-    if (name !== user?.name.value)       data.name     = name;
-    if (email !== user?.email.value)     data.email    = email;
-    if (password.trim().length > 0)      data.password = password;
-
-
-    if (!Object.keys(data).length) {
-      setFeedback("No changes to save.");
+    if (!user) return;
+    const trimmed = name.trim();
+    if (trimmed === user.name.value) {
+      setFeedback("No changes to name.");
       return;
     }
 
     setLoading(true);
     try {
       const repo = new FirebaseUserRepository();
-      const uc   = new UpdateUserUseCase(repo);
-      await uc.execute(uid!, data);
+      const uc = new UpdateUserUseCase(repo);
+      await uc.execute(uid!, { name: trimmed });
+      localStorage.setItem("name", trimmed);
+      setFeedback("Name updated successfully.");
+    } catch (err: any) {
+      setError(err.message || "Failed to update name");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
-      if (data.name) localStorage.setItem("name", data.name);
+  const handleChangePassword = async () => {
+    setError(null);
+    setFeedback(null);
 
-      setFeedback("Profile updated successfully.");
-      setPassword("");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err: unknown) {
-      setError("Failed to update profile");
+    if (!user) return;
+    const currentEmail = user.email.value;
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, currentEmail);
+      setFeedback("A password-reset link has been sent to your email.");
+      setPasswordInput("");
+    } catch (err: any) {
+      setError(err.message || "Failed to send password-reset email");
     } finally {
       setLoading(false);
     }
@@ -71,39 +100,58 @@ export const ProfileUser = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={5} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">My Profile</Typography>
-        {error    && <Alert severity="error">{error}</Alert>}
+        <Typography variant="h4" align="center">
+          My Profile
+        </Typography>
+
+        {error && <Alert severity="error">{error}</Alert>}
         {feedback && <Alert severity="success">{feedback}</Alert>}
 
-        <TextField
-          label="Name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          fullWidth
-        />
+
         <TextField
           label="Email"
           type="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-          fullWidth
-        />
-        <TextField
-          label="New Password"
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          helperText="Leave blank to keep current password"
+          disabled
           fullWidth
         />
 
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Saving…" : "Save Changes"}
-        </Button>
+
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+          />
+          <Button
+            variant="outlined"
+            onClick={handleChangeName}
+            disabled={loading}
+          >
+            Change Name
+          </Button>
+        </Box>
+
+
+        <Box display="flex" alignItems="center" gap={1} >
+          <TextField
+            label="(Enter current password to reset)"
+            type="password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            helperText="Leave blank to skip"
+            fullWidth
+          />
+          <Button
+            variant="outlined"
+            onClick={handleChangePassword}
+            disabled={loading}
+            sx={{ mb: 3 }}
+          >
+            Change Password
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

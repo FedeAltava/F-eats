@@ -28,7 +28,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (role === "restaurant" && uid) {
-      navigate(`/register-restaurant`);
+      navigate(`/profile-restaurant`);
       return;
     }
 

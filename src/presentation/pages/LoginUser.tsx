@@ -1,4 +1,4 @@
-// src/presentation/pages/LoginUser.tsx
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,24 +24,23 @@ export const LoginUser = () => {
     setError(null);
     setLoading(true);
     try {
-      // 1️⃣ Primero autenticas en Firebase Auth
+
       const authRepo = new FirebaseAuthRepository();
       const signInUC = new SignInUseCase(authRepo);
       const { uid, role } = await signInUC.execute(email, password);
 
-      // 2️⃣ Ahora recuperas al usuario completo (para obtener el name)
+
       const userRepo = new FirebaseUserRepository();
       const user = await userRepo.findById(uid);
       if (!user) {
         throw new Error("User record not found in Firestore");
       }
 
-      // 3️⃣ Guardas en localStorage uid / role / name
       localStorage.setItem("uid", uid);
       localStorage.setItem("role", role);
       localStorage.setItem("name", user.name.value);
 
-      // 4️⃣ Rediriges al Home (o donde quieras)
+
       navigate("/");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

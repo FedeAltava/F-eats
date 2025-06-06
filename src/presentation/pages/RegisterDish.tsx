@@ -42,7 +42,6 @@ export const RegisterDish = () => {
       setPrice(0);
       setDescription("");
       setImageUrl("");
-      // opcional: volver al detalle
        navigate(`/restaurant/${restaurantId}`);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: unknown) {

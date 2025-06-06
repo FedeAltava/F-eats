@@ -1,12 +1,12 @@
-// src/domain/entities/Order.ts
+
 import { Id } from "../value-objects/shared/Id";
 import { ValueObject } from "../value-objects/shared/value-object";
 
-// Value Object para los ítems de la orden
+
 interface OrderItemProps {
   dishId: string;
   quantity: number;
-  price: number; // precio unitario al momento de realizar la orden
+  price: number; 
 }
 
 export class OrderItem extends ValueObject<OrderItemProps> {
@@ -27,7 +27,7 @@ export class OrderItem extends ValueObject<OrderItemProps> {
     return new OrderItem(props);
   }
 
-  // total por línea
+
   public get lineTotal(): number {
     return this.quantity * this.price;
   }
@@ -89,7 +89,6 @@ export class Order {
       throw new Error("At least one item is required");
     }
 
-    // convertir a OrderItem[]
     const itemsVO = data.items.map((i) =>
       OrderItem.create({ dishId: i.dishId, quantity: i.quantity, price: i.price })
     );
@@ -108,7 +107,6 @@ export class Order {
     });
   }
 
-  // Representación para persistencia en Firestore
   public toPersistence(): unknown {
     return {
       userId: this.userId,
@@ -123,7 +121,6 @@ export class Order {
     };
   }
 
-  // ─── NUEVO MÉTODO PARA RECONSTRUIR DESDE DATOS DE FIRESTORE ───
   public static reconstruct(params: {
     id: string;
     userId: string;

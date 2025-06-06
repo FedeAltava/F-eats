@@ -1,4 +1,4 @@
-// src/domain/repositories/OrderRepository.ts
+
 import { Order } from "../../domain/entities/Order";
 
 export interface OrderRepository {

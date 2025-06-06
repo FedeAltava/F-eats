@@ -1,4 +1,4 @@
-// src/presentation/pages/ManageDishes.tsx
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -31,7 +31,7 @@ export const ManageDishes: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
-  // 1️⃣ Carga inicial de platos
+
   useEffect(() => {
     if (!restaurantId) return;
 
@@ -49,13 +49,13 @@ export const ManageDishes: React.FC = () => {
     })();
   }, [restaurantId]);
 
-  // 2️⃣ Abrir diálogo de confirmación
+
   const askDelete = (dishId: string) => {
     setDeletingId(dishId);
     setConfirmOpen(true);
   };
 
-  // 3️⃣ Ejecutar borrado
+
   const handleDelete = async () => {
     if (!deletingId) return;
 
@@ -64,7 +64,7 @@ export const ManageDishes: React.FC = () => {
       const uc = new DeleteDish(repo);
       await uc.execute(deletingId);
 
-      // Filtrar el plato eliminado del estado local
+
       setDishes((prev) => prev.filter((d) => d.id.value !== deletingId));
     } catch {
       setError("Failed to delete dish");
@@ -150,7 +150,6 @@ export const ManageDishes: React.FC = () => {
         ))}
       </Grid>
 
-      {/* Diálogo de confirmación de borrado */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>

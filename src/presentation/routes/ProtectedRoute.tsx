@@ -17,13 +17,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const role = localStorage.getItem("role") as Role | null;
 
   if (role !== allowedRole) {
-    // Si no tiene el permiso correcto, redirigimos
+
     const target = redirectTo ?? (allowedRole === "user" 
       ? "/login" 
       : "/login-restaurant");
     return <Navigate to={target} replace />;
   }
 
-  // Si el rol coincide, renderizamos las rutas hijas
   return <Outlet />;
 };

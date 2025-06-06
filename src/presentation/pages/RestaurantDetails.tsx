@@ -1,4 +1,4 @@
-// src/presentation/pages/RestaurantDetails.tsx
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -100,7 +100,7 @@ export const RestaurantDetails: React.FC = () => {
                   },
                 }}
               >
-                {/* Imagen del plato */}
+
                 {d.imageUrl?.value && (
                   <CardMedia
                     component="img"
@@ -110,14 +110,13 @@ export const RestaurantDetails: React.FC = () => {
                   />
                 )}
 
-                {/* Contenido principal: título, descripción y precio */}
                 <CardContent sx={{ flexGrow: 1 }}>
-                  {/* flexGrow: 1 hace que este bloque ocupe todo el espacio sobrante */}
+
                   <Typography variant="h6" gutterBottom>
                     {d.name.value}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    {/* Si la descripción es corta o larga, el cuerpo siempre crece igual */}
+
                     {d.description?.value || "No description available."}
                   </Typography>
                   <Typography variant="subtitle1">
@@ -125,7 +124,6 @@ export const RestaurantDetails: React.FC = () => {
                   </Typography>
                 </CardContent>
 
-                {/* Botón “Add to Cart”, siempre abajo de la tarjeta */}
                 <CardActions>
                   <Button
                     size="small"
@@ -147,7 +145,6 @@ export const RestaurantDetails: React.FC = () => {
         </Grid>
       </Container>
 
-      {/* Snackbar para “Product added” */}
       <Snackbar
         open={snackOpen}
         autoHideDuration={2500}

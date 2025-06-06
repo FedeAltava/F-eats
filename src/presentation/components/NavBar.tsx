@@ -1,4 +1,3 @@
-// src/presentation/components/NavBar.tsx
 import { useState, MouseEvent } from "react";
 import {
   AppBar,
@@ -16,7 +15,6 @@ export const NavBar = () => {
   const name = localStorage.getItem("name");
   const role = localStorage.getItem("role");
 
-  // Estados para los menús de Sign Up / Login
   const [anchorSignUp, setAnchorSignUp] = useState<HTMLElement | null>(null);
   const [anchorLogin, setAnchorLogin] = useState<HTMLElement | null>(null);
 
@@ -39,18 +37,16 @@ export const NavBar = () => {
     navigate("/");
   };
 
-  // Definimos a dónde apunta el logo según el estado de sesión
   const logoTo = (() => {
-    if (!name) return "/"; // no está logueado: Home público
-    if (role === "user") return "/"; 
+    if (!name) return "/";
+    if (role === "user") return "/";
     if (role === "restaurant") return "/profile-restaurant";
-    return "/"; 
+    return "/";
   })();
 
   return (
     <AppBar position="static">
       <Toolbar>
-        {/* Logo / Título: aquí el 'to' es dinámico */}
         <Typography
           variant="h6"
           component={Link}
@@ -61,7 +57,6 @@ export const NavBar = () => {
         </Typography>
 
         {name ? (
-          /* Si está logueado, mostramos saludo y opciones según rol */
           <Box>
             <Typography component="span" sx={{ mr: 2 }}>
               Hello, {name}
@@ -72,15 +67,13 @@ export const NavBar = () => {
                 <Button
                   color="inherit"
                   component={Link}
-                  to={`/restaurant/${localStorage.getItem("uid")}/manage-dishes`}
+                  to={`/restaurant/${localStorage.getItem(
+                    "uid"
+                  )}/manage-dishes`}
                 >
                   My Dishes
                 </Button>
-                <Button
-                  color="inherit"
-                  component={Link}
-                  to="/orders-received"
-                >
+                <Button color="inherit" component={Link} to="/orders-received">
                   Orders Received
                 </Button>
                 <Button
@@ -112,9 +105,7 @@ export const NavBar = () => {
             </Button>
           </Box>
         ) : (
-          /* Si NO está logueado, mostramos DOS botones: Sign Up y Login */
           <Box>
-            {/* Botón “Sign Up” abre menú con dos opciones */}
             <Button color="inherit" onClick={handleOpenSignUp}>
               Sign Up
             </Button>
@@ -139,7 +130,6 @@ export const NavBar = () => {
               </MenuItem>
             </Menu>
 
-            {/* Botón “Login” abre menú con dos opciones */}
             <Button color="inherit" onClick={handleOpenLogin}>
               Login
             </Button>
@@ -148,11 +138,7 @@ export const NavBar = () => {
               open={Boolean(anchorLogin)}
               onClose={handleCloseLogin}
             >
-              <MenuItem
-                component={Link}
-                to="/login"
-                onClick={handleCloseLogin}
-              >
+              <MenuItem component={Link} to="/login" onClick={handleCloseLogin}>
                 As User
               </MenuItem>
               <MenuItem

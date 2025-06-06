@@ -1,4 +1,4 @@
-// src/application/repositories/AuthRepository.ts
+
 export type UserRole = "user" | "restaurant";
 
 export interface AuthRepository {

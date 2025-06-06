@@ -1,30 +1,41 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
-import { Container, Typography, Box, TextField, Button, Alert } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { UpdateRestaurant } from "../../application/use-cases/restaurant/UpdateRestaurantUse-case";
 import { Restaurant } from "../../domain/entities/Restaurant";
 import { RestaurantUpdateData } from "../../domain/entities/Restaurant";
 
-export const ProfileRestaurant = () => {
+export const ProfileRestaurant: React.FC = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
   const uid = localStorage.getItem("uid");
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
 
-  const [name, setName]         = useState("");
-  const [email, setEmail]       = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
   const [category, setCategory] = useState("");
-  const [rating, setRating]     = useState<number>(0);
+  const [rating, setRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState("");
 
-  const [error, setError]       = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [loading, setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // 1️⃣ Cargar restaurante al montar
+
   useEffect(() => {
     (async () => {
       if (!uid) {
@@ -38,7 +49,7 @@ export const ProfileRestaurant = () => {
         return;
       }
       setRestaurant(r);
-      // pre-llenar campos
+
       setName(r.name.value);
       setEmail(r.email.value);
       setCategory(r.category.value);
@@ -47,18 +58,17 @@ export const ProfileRestaurant = () => {
     })();
   }, [uid, navigate]);
 
-  // 2️⃣ Enviar sólo los campos que han cambiado
+
   const handleSave = async () => {
     setError(null);
     setFeedback(null);
     if (!restaurant) return;
 
     const data: RestaurantUpdateData = {};
-    if (name     !== restaurant.name.value)     data.name     = name;
-    if (email    !== restaurant.email.value)    data.email    = email;
-    if (password.trim().length > 0)             data.password = password;
+    if (name !== restaurant.name.value) data.name = name;
+    if (passwordInput.trim().length > 0) data.password = passwordInput;
     if (category !== restaurant.category.value) data.category = category;
-    if (rating   !== restaurant.rating.value)   data.rating   = rating;
+    if (rating !== restaurant.rating.value) data.rating = rating;
     if (imageUrl !== restaurant.imageUrl.value) data.imageUrl = imageUrl;
 
     if (Object.keys(data).length === 0) {
@@ -68,19 +78,35 @@ export const ProfileRestaurant = () => {
 
     setLoading(true);
     try {
-      // 3️⃣ Construir nueva entidad y llamar al use case
       const repo = new FirebaseRestaurantRepository();
-      const uc   = new UpdateRestaurant(repo);
+      const uc = new UpdateRestaurant(repo);
       await uc.execute(uid!, data);
 
-      // 4️⃣ Refresca el NavBar si cambió el nombre
       if (data.name) localStorage.setItem("name", data.name);
-
       setFeedback("Profile updated successfully.");
-      setPassword("");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err: unknown) {
+      setPasswordInput("");
+    } catch {
       setError("Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleChangePassword = async () => {
+    setError(null);
+    setFeedback(null);
+
+    if (!restaurant) return;
+    const currentEmail = restaurant.email.value;
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, currentEmail);
+      setFeedback("A password-reset link has been sent to your email.");
+      setPasswordInput("");
+    } catch (err: any) {
+      setError(err.message || "Failed to send password-reset email");
     } finally {
       setLoading(false);
     }
@@ -91,22 +117,72 @@ export const ProfileRestaurant = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={5} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">Edit Restaurant</Typography>
-        {error    && <Alert severity="error">{error}</Alert>}
+        <Typography variant="h4" align="center">
+          Edit Restaurant
+        </Typography>
+        {error && <Alert severity="error">{error}</Alert>}
         {feedback && <Alert severity="success">{feedback}</Alert>}
 
-        <TextField label="Name"        value={name}     onChange={e => setName(e.target.value)}        fullWidth />
-        <TextField label="Email"       value={email}    onChange={e => setEmail(e.target.value)}      fullWidth />
         <TextField
-          label="New Password"
-          type="password"
-          value={password}
-          helperText="Leave blank to keep current password"
-          onChange={e => setPassword(e.target.value)}
+          label="Email"
+          type="email"
+          value={email}
+          disabled
           fullWidth
         />
-        <TextField label="Category"    value={category} onChange={e => setCategory(e.target.value)}   fullWidth />
-        <TextField label="Image URL"   value={imageUrl} onChange={e => setImageUrl(e.target.value)} fullWidth />
+
+
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+          />
+          <Button
+            variant="outlined"
+            onClick={handleSave}
+            disabled={loading}
+          >
+            Change Name
+          </Button>
+        </Box>
+
+
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            label="(Enter current password to reset)"
+            type="password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            helperText="Leave blank to skip"
+            fullWidth
+          />
+          <Button
+            variant="outlined"
+            onClick={handleChangePassword}
+            disabled={loading}
+            sx={{ mb: 3 }}
+          >
+            Change Password
+          </Button>
+        </Box>
+
+
+        <TextField
+          label="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          fullWidth
+        />
+
+
+        <TextField
+          label="Image URL"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          fullWidth
+        />
 
         <Button
           variant="contained"

@@ -1,4 +1,4 @@
-// src/presentation/pages/RestaurantOrders.tsx
+
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -41,18 +41,17 @@ export const RestaurantOrders: React.FC = () => {
       }
 
       try {
-        // 1️⃣ Obtener todos los pedidos para este restaurante
+
         const orderRepo = new FirebaseOrderRepository();
         const listUC = new ListOrdersByRestaurantUseCase(orderRepo);
         const orders = await listUC.execute(restaurantId);
 
-        // 2️⃣ Extraer userId únicos para obtener sus nombres
+
         const uniqueUserIds = Array.from(new Set(orders.map((o) => o.userId)));
 
         const userRepo = new FirebaseUserRepository();
         const userMap: Record<string, string> = {};
 
-        // 3️⃣ Hacer fetch de cada usuario para extraer su name
         await Promise.all(
           uniqueUserIds.map(async (uid) => {
             const user = await userRepo.findById(uid);
@@ -60,7 +59,6 @@ export const RestaurantOrders: React.FC = () => {
           })
         );
 
-        // 4️⃣ Combinar cada orden con el nombre de usuario
         const combined: OrderWithUserName[] = orders.map((o) => ({
           order: o,
           userName: userMap[o.userId] || "Unknown",
@@ -121,13 +119,9 @@ export const RestaurantOrders: React.FC = () => {
           <TableBody>
             {ordersWithUser.map(({ order, userName }) => (
               <TableRow key={order.id.value}>
-                {/* Order Date */}
+
                 <TableCell>{order.createdAt.toLocaleString()}</TableCell>
-
-                {/* User Name */}
                 <TableCell>{userName}</TableCell>
-
-                {/* Total */}
                 <TableCell align="right">{order.total.toFixed(2)}</TableCell>
               </TableRow>
             ))}

@@ -24,12 +24,11 @@ export const SignUpUser = () => {
     }
     setLoading(true);
     try {
-      // 1️⃣ Registro en Firebase Auth
+
       const authRepo = new FirebaseAuthRepository();
       const signUp   = new SignUpUseCase(authRepo);
       const uid      = await signUp.execute(email, password, "user");
 
-   // 2️⃣ Crear entidad User y guardarla en Firestore
     const userEntity = User.create({ id: uid, name, email, password });
     const userRepo   = new FirebaseUserRepository();
     const createU    = new CreateUser(userRepo);

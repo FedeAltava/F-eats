@@ -87,7 +87,7 @@ export class Restaurant extends Entity {
         category, 
         rating, 
         imageUrl, 
-        menu: this.menu   // Conservamos el menú actual
+        menu: this.menu 
       });
     }
 
@@ -99,7 +99,7 @@ export class Restaurant extends Entity {
         category: this.category.value,
         rating: this.rating.value,
         imageUrl: this.imageUrl.value
-        // No incluye menú por ahora
+        
       };
     }
 
@@ -112,7 +112,6 @@ export class Restaurant extends Entity {
         category: this.category.value,
         rating: this.rating.value,
         imageUrl: this.imageUrl.value
-        // No incluye menú por ahora
       }
   }
 }

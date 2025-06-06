@@ -1,4 +1,4 @@
-// src/presentation/pages/Checkout.tsx
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,14 +29,14 @@ export const Checkout: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // 1️⃣ Redirigir si carrito está vacío
+
   useEffect(() => {
     if (items.length === 0) {
       navigate("/");
       return;
     }
 
-    // 2️⃣ Traer nombre del restaurante (opcional, para mostrar en la cabecera)
+
     const restaurantId = items[0]?.dish.restaurantId.value || "";
     if (restaurantId) {
       const loadName = async () => {
@@ -52,7 +52,7 @@ export const Checkout: React.FC = () => {
     }
   }, [items, navigate]);
 
-  // 3️⃣ Calcular total y restaurantId
+
   const total = items.reduce(
     (sum, i) => sum + i.dish.price.value * i.quantity,
     0
@@ -62,7 +62,7 @@ export const Checkout: React.FC = () => {
   const handleConfirm = async () => {
     setError(null);
 
-    // Validar restaurantId
+
     if (!restaurantId) {
       setError("Could not determine restaurant. Please try again.");
       return;
@@ -75,7 +75,7 @@ export const Checkout: React.FC = () => {
         throw new Error("User not authenticated");
       }
 
-      // 4️⃣ Construir la orden
+
       const order = Order.create({
         userId,
         restaurantId,
@@ -86,16 +86,15 @@ export const Checkout: React.FC = () => {
         })),
       });
 
-      // 5️⃣ Persistir en Firestore
+
       const repo = new FirebaseOrderRepository();
       const uc = new CreateOrder(repo);
       await uc.execute(order);
 
-      // 6️⃣ Vaciar carrito y mostrar success
+
       clearCart();
       setSuccess(true);
 
-      // 7️⃣ Redirigir a Home tras 1.5s
       setTimeout(() => navigate("/"), 1500);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

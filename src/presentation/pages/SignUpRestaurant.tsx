@@ -1,4 +1,4 @@
-// src/presentation/pages/SignUpRestaurant.tsx
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -23,8 +23,7 @@ export const SignUpRestaurant = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [category, setCategory] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [rating, setRating] = useState<number>(0);
+  const [rating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,7 +53,6 @@ export const SignUpRestaurant = () => {
       const createRest = new CreateRestaurant(restRepo);
       await createRest.execute(restaurantEntity);
 
-      // 3️⃣ Guardar datos para el NavBar
       localStorage.setItem("uid", uid);
       localStorage.setItem("role", "restaurant");
       localStorage.setItem("name", name);
