@@ -1,3 +1,4 @@
+// src/presentation/pages/Home.tsx
 import { useState, useEffect } from "react";
 import {
   Container,
@@ -9,44 +10,34 @@ import {
   Button,
   CircularProgress,
   Box,
+  CardActionArea,
 } from "@mui/material";
-
 import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
-import { Link, useNavigate } from "react-router-dom";
 
 export const Home = () => {
-  const navigate = useNavigate();
-  const role = localStorage.getItem("role");
-  const uid = localStorage.getItem("uid");
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    if (role === "restaurant" && uid) {
-      navigate(`/profile-restaurant`);
-      return;
-    }
-
     const load = async () => {
       try {
         const repo = new FirebaseRestaurantRepository();
         const useCase = new ListRestaurantsUseCase(repo);
         const list = await useCase.execute();
         setRestaurants(list);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
+      } catch {
         setError("Error listing restaurants");
       } finally {
         setLoading(false);
       }
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
@@ -69,21 +60,9 @@ export const Home = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
-<Typography
-  variant="h5"
-  component="h1"
-  align="center"
-  sx={{
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    mb: 2,
-    color: "text.primary",
-  }}
->
-  Restaurants
-</Typography>
-
+      <Typography variant="h4" gutterBottom align="center">
+        Restaurants
+      </Typography>
 
       <Grid container spacing={4}>
         {restaurants.map((r) => (
@@ -98,20 +77,23 @@ export const Home = () => {
                 },
               }}
             >
-              {r.imageUrl.value && (
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={r.imageUrl.value}
-                  alt={r.name.value}
-                />
-              )}
-              <CardContent>
-                <Typography variant="h6">{r.name.value}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Category: {r.category.value}
-                </Typography>
-              </CardContent>
+              <CardActionArea component={Link} to={`/restaurant/${r.id.value}`}>
+                {r.imageUrl.value && (
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={r.imageUrl.value}
+                    alt={r.name.value}
+                  />
+                )}
+                <CardContent>
+                  <Typography variant="h6">{r.name.value}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Category: {r.category.value}
+                  </Typography>
+
+                </CardContent>
+              </CardActionArea>
               <CardActions>
                 <Button
                   size="small"
