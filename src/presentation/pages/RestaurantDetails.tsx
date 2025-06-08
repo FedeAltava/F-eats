@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -15,7 +14,7 @@ import {
   Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-
+import { orange } from "@mui/material/colors";
 import { FirebaseDishRepository } from "../../infrastructure/repositories/FirebaseDishRepository";
 import { ListDishesByRestaurant } from "../../application/use-cases/dish/ListDishesByRestaurant";
 import { Dish } from "../../domain/entities/Dish";
@@ -75,11 +74,33 @@ export const RestaurantDetails: React.FC = () => {
   }
 
   const role = localStorage.getItem("role");
-
+  const title = "Restaurants";
+  const len = title.length;
   return (
     <>
       <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Typography variant="h4" gutterBottom align="center">
+        <Typography
+          variant="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            width: 0,
+            mx: "auto",
+            "@keyframes typing": {
+              from: { width: 0 },
+              to: { width: `${len}ch` },
+            },
+            "@keyframes blink": {
+              "0%, 49%": { borderColor: "transparent" },
+              "50%, 100%": { borderColor: orange[600] },
+            },
+            animation: `typing 2s steps(${len}) forwards`,
+          }}
+        >
           Menu
         </Typography>
 
@@ -100,7 +121,6 @@ export const RestaurantDetails: React.FC = () => {
                   },
                 }}
               >
-
                 {d.imageUrl?.value && (
                   <CardMedia
                     component="img"
@@ -111,12 +131,10 @@ export const RestaurantDetails: React.FC = () => {
                 )}
 
                 <CardContent sx={{ flexGrow: 1 }}>
-
                   <Typography variant="h6" gutterBottom>
                     {d.name.value}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-
                     {d.description?.value || "No description available."}
                   </Typography>
                   <Typography variant="subtitle1">

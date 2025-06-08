@@ -1,5 +1,6 @@
 // src/presentation/pages/Home.tsx
 import { useState, useEffect } from "react";
+import bannerFeats from "../../assets/bannerFeats.png";
 import {
   Container,
   Typography,
@@ -14,7 +15,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-
+import { orange } from "@mui/material/colors";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
@@ -57,10 +58,77 @@ export const Home = () => {
       </Container>
     );
   }
+  const title = "Restaurants";
+  const len = title.length;
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center">
+      <Box
+        mb={5}
+        sx={{
+          position: "relative",
+          width: "100%",
+          maxWidth: 1000,
+          height: 200,
+          mx: "auto",
+          borderRadius: 2,
+          overflow: "hidden",
+          display: "block",
+          "@media (max-width:674px)": {
+            display: "none",
+          },
+        }}
+      >
+        <Box
+          component="img"
+          src={bannerFeats}
+          alt="F-eats portada"
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "top",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "white",
+            fontSize: "6rem",
+            fontWeight: "bold",
+            textShadow: "2px 2px 4px rgba(0,0,0,0.7)",
+          }}
+        >
+          Feats
+        </Box>
+      </Box>
+
+      <Typography
+        variant="h2"
+        align="center"
+        gutterBottom
+        sx={{
+          color: orange[600],
+          fontFamily: "Courier, monospace",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          width: 0,
+          mx: "auto",
+          "@keyframes typing": {
+            from: { width: 0 },
+            to: { width: `${len}ch` },
+          },
+          "@keyframes blink": {
+            "0%, 49%": { borderColor: "transparent" },
+            "50%, 100%": { borderColor: orange[600] },
+          },
+          animation: `typing 2s steps(${len}) forwards`,
+        }}
+      >
         Restaurants
       </Typography>
 
@@ -91,7 +159,6 @@ export const Home = () => {
                   <Typography variant="body2" color="text.secondary">
                     Category: {r.category.value}
                   </Typography>
-
                 </CardContent>
               </CardActionArea>
               <CardActions>

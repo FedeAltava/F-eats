@@ -140,7 +140,7 @@ export const NavBar: React.FC = () => {
             to="/"
             sx={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
           >
-            F-eat
+            Feats
           </Typography>
 
           {isMobile ? (

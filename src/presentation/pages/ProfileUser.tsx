@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { orange } from "@mui/material/colors";
 
 import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository";
 import { UpdateUserUseCase } from "../../application/use-cases/user/UpdateUserUse-case";
@@ -30,7 +31,6 @@ export const ProfileUser: React.FC = () => {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     (async () => {
       if (!uid) {
@@ -48,7 +48,6 @@ export const ProfileUser: React.FC = () => {
       setEmail(u.email.value);
     })();
   }, [uid, navigate]);
-
 
   const handleChangeName = async () => {
     setError(null);
@@ -75,7 +74,6 @@ export const ProfileUser: React.FC = () => {
     }
   };
 
-
   const handleChangePassword = async () => {
     setError(null);
     setFeedback(null);
@@ -96,17 +94,38 @@ export const ProfileUser: React.FC = () => {
   };
 
   if (!user) return null;
-
+  const title = "Restaurants";
+  const len = title.length;
   return (
     <Container maxWidth="sm">
       <Box mt={5} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">
+        <Typography
+          variant="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            width: 0,
+            mx: "auto",
+            "@keyframes typing": {
+              from: { width: 0 },
+              to: { width: `${len}ch` },
+            },
+            "@keyframes blink": {
+              "0%, 49%": { borderColor: "transparent" },
+              "50%, 100%": { borderColor: orange[600] },
+            },
+            animation: `typing 2s steps(${len}) forwards`,
+          }}
+        >
           My Profile
         </Typography>
 
         {error && <Alert severity="error">{error}</Alert>}
         {feedback && <Alert severity="success">{feedback}</Alert>}
-
 
         <TextField
           label="Email"
@@ -115,7 +134,6 @@ export const ProfileUser: React.FC = () => {
           disabled
           fullWidth
         />
-
 
         <Box display="flex" alignItems="center" gap={1}>
           <TextField
@@ -133,8 +151,7 @@ export const ProfileUser: React.FC = () => {
           </Button>
         </Box>
 
-
-        <Box display="flex" alignItems="center" gap={1} >
+        <Box display="flex" alignItems="center" gap={1}>
           <TextField
             label="(Enter current password to reset)"
             type="password"

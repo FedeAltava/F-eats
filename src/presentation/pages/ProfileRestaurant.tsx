@@ -10,9 +10,8 @@ import {
   Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { orange } from "@mui/material/colors";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { UpdateRestaurant } from "../../application/use-cases/restaurant/UpdateRestaurantUse-case";
 import { Restaurant } from "../../domain/entities/Restaurant";
@@ -34,7 +33,8 @@ export const ProfileRestaurant: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const title = "Restaurants";
+  const len = title.length;
 
   useEffect(() => {
     (async () => {
@@ -117,7 +117,26 @@ export const ProfileRestaurant: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={5} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">
+        <Typography  variant="h2"
+        align="center"
+        gutterBottom
+        sx={{
+          color: orange[600],
+          fontFamily: "Courier, monospace",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          width: 0,
+          mx: "auto",
+          "@keyframes typing": {
+            from: { width: 0 },
+            to: { width: `${len}ch` },
+          },
+          "@keyframes blink": {
+            "0%, 49%": { borderColor: "transparent" },
+            "50%, 100%": { borderColor: orange[600] },
+          },
+          animation: `typing 2s steps(${len}) forwards`,
+        }}>
           Edit Restaurant
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}

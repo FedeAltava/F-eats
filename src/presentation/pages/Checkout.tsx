@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,7 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useCartStore } from "../store/useCartStore";
-
+import { orange } from "@mui/material/colors";
 import { FirebaseOrderRepository } from "../../infrastructure/repositories/FirebaseOrderRepository";
 import { CreateOrder } from "../../application/use-cases/order/CreateOrderUse-case";
 import { Order } from "../../domain/entities/Order";
@@ -28,14 +27,14 @@ export const Checkout: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const title = "Restaurants";
+  const len = title.length;
 
   useEffect(() => {
     if (items.length === 0) {
       navigate("/");
       return;
     }
-
 
     const restaurantId = items[0]?.dish.restaurantId.value || "";
     if (restaurantId) {
@@ -52,7 +51,6 @@ export const Checkout: React.FC = () => {
     }
   }, [items, navigate]);
 
-
   const total = items.reduce(
     (sum, i) => sum + i.dish.price.value * i.quantity,
     0
@@ -61,7 +59,6 @@ export const Checkout: React.FC = () => {
 
   const handleConfirm = async () => {
     setError(null);
-
 
     if (!restaurantId) {
       setError("Could not determine restaurant. Please try again.");
@@ -75,7 +72,6 @@ export const Checkout: React.FC = () => {
         throw new Error("User not authenticated");
       }
 
-
       const order = Order.create({
         userId,
         restaurantId,
@@ -86,17 +82,15 @@ export const Checkout: React.FC = () => {
         })),
       });
 
-
       const repo = new FirebaseOrderRepository();
       const uc = new CreateOrder(repo);
       await uc.execute(order);
-
 
       clearCart();
       setSuccess(true);
 
       setTimeout(() => navigate("/"), 1500);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Failed to create order");
     } finally {
@@ -106,7 +100,28 @@ export const Checkout: React.FC = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Typography variant="h4" align="center">
+      <Typography
+        variant="h2"
+        align="center"
+        gutterBottom
+        sx={{
+          color: orange[600],
+          fontFamily: "Courier, monospace",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          width: 0,
+          mx: "auto",
+          "@keyframes typing": {
+            from: { width: 0 },
+            to: { width: `${len}ch` },
+          },
+          "@keyframes blink": {
+            "0%, 49%": { borderColor: "transparent" },
+            "50%, 100%": { borderColor: orange[600] },
+          },
+          animation: `typing 2s steps(${len}) forwards`,
+        }}
+      >
         Checkout {restaurantName && `– ${restaurantName}`}
       </Typography>
 
@@ -150,7 +165,11 @@ export const Checkout: React.FC = () => {
           onClick={handleConfirm}
           disabled={loading || success}
         >
-          {loading ? "Placing Order…" : success ? "Order Placed!" : "Confirm Order"}
+          {loading
+            ? "Placing Order…"
+            : success
+            ? "Order Placed!"
+            : "Confirm Order"}
         </Button>
       </Box>
     </Container>
