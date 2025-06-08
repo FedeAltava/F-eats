@@ -74,7 +74,7 @@ export const RestaurantDetails: React.FC = () => {
   }
 
   const role = localStorage.getItem("role");
-  const title = "Restaurants";
+  const title = "Menu";
   const len = title.length;
   return (
     <>

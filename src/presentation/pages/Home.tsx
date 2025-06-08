@@ -14,13 +14,22 @@ import {
   CardActionArea,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { orange } from "@mui/material/colors";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
 import { ListRestaurantsUseCase } from "../../application/use-cases/restaurant/ListRestaurantsUseCase";
 import { Restaurant } from "../../domain/entities/Restaurant";
 
 export const Home = () => {
+  const navigate = useNavigate();
+  const role = localStorage.getItem("role");
+
+  useEffect(() => {
+    if (role === "restaurant") {
+      navigate("/profile-restaurant");
+    }
+  }, [role, navigate]);
+
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");

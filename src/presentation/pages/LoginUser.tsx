@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -7,28 +6,28 @@ import {
   Box,
   TextField,
   Button,
-  Alert
+  Alert,
 } from "@mui/material";
 import { FirebaseAuthRepository } from "../../infrastructure/repositories/FirebaseAuthRepository";
 import { SignInUseCase } from "../../application/use-cases/auth/SignInUseCase";
 import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository"; // ↪ lo necesitas aquí
+import { orange } from "@mui/material/colors";
 
 export const LoginUser = () => {
   const navigate = useNavigate();
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState<string | null>(null);
-  const [loading, setLoading]   = useState(false);
-
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const title = "User Login";
+  const len = title.length;
   const handleLogin = async () => {
     setError(null);
     setLoading(true);
     try {
-
       const authRepo = new FirebaseAuthRepository();
       const signInUC = new SignInUseCase(authRepo);
       const { uid, role } = await signInUC.execute(email, password);
-
 
       const userRepo = new FirebaseUserRepository();
       const user = await userRepo.findById(uid);
@@ -40,9 +39,8 @@ export const LoginUser = () => {
       localStorage.setItem("role", role);
       localStorage.setItem("name", user.name.value);
 
-
       navigate("/");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Failed to sign in");
     } finally {
@@ -53,27 +51,46 @@ export const LoginUser = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={6} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">User Login</Typography>
+        <Typography
+          variant="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            width: 0,
+            mx: "auto",
+            "@keyframes typing": {
+              from: { width: 0 },
+              to: { width: `${len}ch` },
+            },
+            "@keyframes blink": {
+              "0%, 49%": { borderColor: "transparent" },
+              "50%, 100%": { borderColor: orange[600] },
+            },
+            animation: `typing 2s steps(${len}) forwards`,
+          }}
+        >
+          User Login
+        </Typography>
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
           label="Email"
           type="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           fullWidth
         />
         <TextField
           label="Password"
           type="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           fullWidth
         />
-        <Button
-          variant="contained"
-          onClick={handleLogin}
-          disabled={loading}
-        >
+        <Button variant="contained" onClick={handleLogin} disabled={loading}>
           {loading ? "Signing In…" : "Sign In"}
         </Button>
       </Box>

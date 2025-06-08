@@ -1,5 +1,5 @@
 // src/presentation/components/NavBar.tsx
-import React, { useState } from "react";
+import React, { useState, MouseEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -13,6 +13,8 @@ import {
   ListItemButton,
   ListItemText,
   Divider,
+  Menu,
+  MenuItem,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
@@ -27,6 +29,8 @@ export const NavBar: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorSignUp, setAnchorSignUp] = useState<HTMLElement | null>(null);
+  const [anchorLogin, setAnchorLogin] = useState<HTMLElement | null>(null);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -36,18 +40,25 @@ export const NavBar: React.FC = () => {
   const openDrawer = () => setDrawerOpen(true);
   const closeDrawer = () => setDrawerOpen(false);
 
+  const handleOpenSignUp = (e: MouseEvent<HTMLElement>) => setAnchorSignUp(e.currentTarget);
+  const handleCloseSignUp = () => setAnchorSignUp(null);
+
+  const handleOpenLogin = (e: MouseEvent<HTMLElement>) => setAnchorLogin(e.currentTarget);
+  const handleCloseLogin = () => setAnchorLogin(null);
+
+  // Opciones según rol
   const loggedUserItems = [
     { text: "Cart", to: "/cart" },
     { text: "My Orders", to: "/my-orders" },
     { text: "My Profile", to: "/profile" },
   ];
-
   const loggedRestItems = [
     { text: "Add Dish", to: `/restaurant/${localStorage.getItem("uid")}/add-dish` },
     { text: "Orders Received", to: "/orders-received" },
     { text: "My Profile", to: "/profile-restaurant" },
   ];
 
+  // Drawer para mobile
   const guestSignUpItems = [
     { text: "As User", to: "/signup" },
     { text: "As Restaurant", to: "/signup-restaurant" },
@@ -58,37 +69,20 @@ export const NavBar: React.FC = () => {
   ];
 
   const drawerContent = (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={closeDrawer}
-      onKeyDown={closeDrawer}
-    >
+    <Box sx={{ width: 250 }} onClick={closeDrawer} onKeyDown={closeDrawer}>
       {name ? (
         <>
           <Box sx={{ p: 2 }}>
             <Typography variant="subtitle1">Hello, {name}</Typography>
           </Box>
           <Divider />
-
-          {role === "restaurant" ? (
-            <List>
-              {loggedRestItems.map((item) => (
-                <ListItemButton component={Link} to={item.to} key={item.text}>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              ))}
-            </List>
-          ) : (
-            <List>
-              {loggedUserItems.map((item) => (
-                <ListItemButton component={Link} to={item.to} key={item.text}>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              ))}
-            </List>
-          )}
-
+          <List>
+            {(role === "restaurant" ? loggedRestItems : loggedUserItems).map((item) => (
+              <ListItemButton component={Link} to={item.to} key={item.text}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            ))}
+          </List>
           <Divider />
           <List>
             <ListItemButton onClick={handleLogout}>
@@ -103,25 +97,19 @@ export const NavBar: React.FC = () => {
           </Box>
           <Divider />
           <List>
-            <ListItemText
-              primary="Sign Up"
-              sx={{ pl: 2, pt: 1, fontWeight: "bold" }}
-            />
-            {guestSignUpItems.map((item) => (
-              <ListItemButton component={Link} to={item.to} key={item.text} sx={{ pl: 4 }}>
-                <ListItemText primary={item.text} />
+            <Typography sx={{ pl: 2, pt: 1, fontWeight: "bold" }}>Sign Up</Typography>
+            {guestSignUpItems.map((i) => (
+              <ListItemButton component={Link} to={i.to} key={i.text} sx={{ pl: 4 }}>
+                <ListItemText primary={i.text} />
               </ListItemButton>
             ))}
           </List>
           <Divider />
           <List>
-            <ListItemText
-              primary="Login"
-              sx={{ pl: 2, pt: 1, fontWeight: "bold" }}
-            />
-            {guestLoginItems.map((item) => (
-              <ListItemButton component={Link} to={item.to} key={item.text} sx={{ pl: 4 }}>
-                <ListItemText primary={item.text} />
+            <Typography sx={{ pl: 2, pt: 1, fontWeight: "bold" }}>Login</Typography>
+            {guestLoginItems.map((i) => (
+              <ListItemButton component={Link} to={i.to} key={i.text} sx={{ pl: 4 }}>
+                <ListItemText primary={i.text} />
               </ListItemButton>
             ))}
           </List>
@@ -154,51 +142,61 @@ export const NavBar: React.FC = () => {
                   <Typography component="span" sx={{ mr: 2 }}>
                     Hello, {name}
                   </Typography>
-
-                  {role === "restaurant" && (
-                    <>
-                      <Button
-                        color="inherit"
-                        component={Link}
-                        to={`/restaurant/${localStorage.getItem("uid")}/add-dish`}
-                      >
-                        Add Dish
-                      </Button>
-                      <Button color="inherit" component={Link} to="/orders-received">
-                        Orders Received
-                      </Button>
-                      <Button color="inherit" component={Link} to="/profile-restaurant">
-                        My Profile
-                      </Button>
-                    </>
-                  )}
-
-                  {role === "user" && (
-                    <>
-                      <Button color="inherit" component={Link} to="/cart">
-                        Cart
-                      </Button>
-                      <Button color="inherit" component={Link} to="/my-orders">
-                        My Orders
-                      </Button>
-                      <Button color="inherit" component={Link} to="/profile">
-                        My Profile
-                      </Button>
-                    </>
-                  )}
-
+                  {(role === "restaurant" ? loggedRestItems : loggedUserItems).map((item) => (
+                    <Button
+                      color="inherit"
+                      component={Link}
+                      to={item.to}
+                      key={item.text}
+                    >
+                      {item.text}
+                    </Button>
+                  ))}
                   <Button color="inherit" onClick={handleLogout}>
                     Logout
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button color="inherit" component={Link} to="/signup">
+                  <Button color="inherit" onClick={handleOpenSignUp}>
                     Sign Up
                   </Button>
-                  <Button color="inherit" component={Link} to="/login">
+                  <Menu
+                    anchorEl={anchorSignUp}
+                    open={Boolean(anchorSignUp)}
+                    onClose={handleCloseSignUp}
+                  >
+                    {guestSignUpItems.map((i) => (
+                      <MenuItem
+                        component={Link}
+                        to={i.to}
+                        onClick={handleCloseSignUp}
+                        key={i.text}
+                      >
+                        {i.text}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+
+                  <Button color="inherit" onClick={handleOpenLogin}>
                     Login
                   </Button>
+                  <Menu
+                    anchorEl={anchorLogin}
+                    open={Boolean(anchorLogin)}
+                    onClose={handleCloseLogin}
+                  >
+                    {guestLoginItems.map((i) => (
+                      <MenuItem
+                        component={Link}
+                        to={i.to}
+                        onClick={handleCloseLogin}
+                        key={i.text}
+                      >
+                        {i.text}
+                      </MenuItem>
+                    ))}
+                  </Menu>
                 </>
               )}
             </Box>

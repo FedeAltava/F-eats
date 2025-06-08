@@ -11,6 +11,7 @@ import {
 import { FirebaseAuthRepository } from "../../infrastructure/repositories/FirebaseAuthRepository";
 import { SignInUseCase } from "../../application/use-cases/auth/SignInUseCase";
 import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/FirebaseRestaurantRepository";
+import { orange } from "@mui/material/colors";
 
 export const LoginRestaurant = () => {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ export const LoginRestaurant = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const title = "Restaurant Login";
+  const len = title.length;
   const handleLogin = async () => {
     setError(null);
     setLoading(true);
@@ -26,17 +28,16 @@ export const LoginRestaurant = () => {
       const authRepo = new FirebaseAuthRepository();
       const signIn = new SignInUseCase(authRepo);
       const { uid, role } = await signIn.execute(email, password);
-      
+
       if (role !== "restaurant") {
         setError("This account is not a restaurant");
         setLoading(false);
         return;
       }
-      
-      
+
       localStorage.setItem("uid", uid);
       localStorage.setItem("role", role);
-      
+
       const restaurantRepo = new FirebaseRestaurantRepository();
       const restaurant = await restaurantRepo.getById(uid);
       if (restaurant) {
@@ -54,7 +55,28 @@ export const LoginRestaurant = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={6} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">
+        <Typography
+          variant="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            width: 0,
+            mx: "auto",
+            "@keyframes typing": {
+              from: { width: 0 },
+              to: { width: `${len}ch` },
+            },
+            "@keyframes blink": {
+              "0%, 49%": { borderColor: "transparent" },
+              "50%, 100%": { borderColor: orange[600] },
+            },
+            animation: `typing 2s steps(${len}) forwards`,
+          }}
+        >
           Restaurant Login
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}

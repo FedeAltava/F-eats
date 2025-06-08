@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,6 +14,7 @@ import { FirebaseRestaurantRepository } from "../../infrastructure/repositories/
 import { SignUpUseCase } from "../../application/use-cases/auth/SignUpUseCase";
 import { CreateRestaurant } from "../../application/use-cases/restaurant/CreateRestaurantUse-case";
 import { Restaurant } from "../../domain/entities/Restaurant";
+import { orange } from "@mui/material/colors";
 
 export const SignUpRestaurant = () => {
   const navigate = useNavigate();
@@ -27,7 +27,8 @@ export const SignUpRestaurant = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const title = "Restaurant Sign Up";
+  const len = title.length;
   const handleSubmit = async () => {
     if (password !== confirm) {
       setError("Passwords do not match");
@@ -57,7 +58,7 @@ export const SignUpRestaurant = () => {
       localStorage.setItem("role", "restaurant");
       localStorage.setItem("name", name);
 
-      navigate("/login-restaurant");
+      navigate("/profile-restaurant");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: unknown) {
       setError("Failed to sign up restaurant");
@@ -69,7 +70,28 @@ export const SignUpRestaurant = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={6} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h4" align="center">
+        <Typography
+          variant="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            width: 0,
+            mx: "auto",
+            "@keyframes typing": {
+              from: { width: 0 },
+              to: { width: `${len}ch` },
+            },
+            "@keyframes blink": {
+              "0%, 49%": { borderColor: "transparent" },
+              "50%, 100%": { borderColor: orange[600] },
+            },
+            animation: `typing 2s steps(${len}) forwards`,
+          }}
+        >
           Restaurant Sign Up
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}

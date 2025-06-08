@@ -33,7 +33,7 @@ export const ProfileRestaurant: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const title = "Restaurants";
+  const title = "My Profile";
   const len = title.length;
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export const ProfileRestaurant: React.FC = () => {
           },
           animation: `typing 2s steps(${len}) forwards`,
         }}>
-          Edit Restaurant
+          My profile
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}
         {feedback && <Alert severity="success">{feedback}</Alert>}
