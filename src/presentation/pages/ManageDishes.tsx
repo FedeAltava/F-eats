@@ -19,6 +19,7 @@ import { FirebaseDishRepository } from "../../infrastructure/repositories/Fireba
 import { ListDishesByRestaurant } from "../../application/use-cases/dish/ListDishesByRestaurant";
 import { DeleteDish } from "../../application/use-cases/dish/DeleteDish";
 import { Dish } from "../../domain/entities/Dish";
+import { orange } from "@mui/material/colors";
 
 export const ManageDishes: React.FC = () => {
   const { id: restaurantId } = useParams<{ id: string }>();
@@ -98,12 +99,19 @@ export const ManageDishes: React.FC = () => {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h4">My Dishes</Typography>
+        <Typography variant="h3"
+          align="center"
+          gutterBottom
+          sx={{
+            color: orange[600],
+            fontFamily: "Courier, monospace",
+
+          }}>My Dishes</Typography>
         <Button
           variant="contained"
           onClick={() => navigate(`/restaurant/${restaurantId}/add-dish`)}
         >
-          + Add Dish
+          Add Dish
         </Button>
       </Box>
 

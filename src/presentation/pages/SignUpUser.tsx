@@ -1,4 +1,5 @@
-import { useState } from "react";
+// src/presentation/pages/SignUpUser.tsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -8,44 +9,72 @@ import {
   Button,
   Alert,
 } from "@mui/material";
+import { orange } from "@mui/material/colors";
+
 import { FirebaseAuthRepository } from "../../infrastructure/repositories/FirebaseAuthRepository";
 import { FirebaseUserRepository } from "../../infrastructure/repositories/FirebaseUserRepository";
 import { SignUpUseCase } from "../../application/use-cases/auth/SignUpUseCase";
 import { CreateUser } from "../../application/use-cases/user/CreateUserUse-case";
 import { User } from "../../domain/entities/User";
-import { orange } from "@mui/material/colors";
 
-export const SignUpUser = () => {
+export const SignUpUser: React.FC = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+
+  const [name, setName]         = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const title = "User Sign Up";
-  const len = title.length;
+  const [confirm, setConfirm]   = useState("");
+  const [error, setError]       = useState<string | null>(null);
+  const [loading, setLoading]   = useState(false);
+
+
+
+
+  const validateInputs = () => {
+    if (!name.trim()) {
+      throw new Error("Name is required");
+    }
+    if (!email.trim()) {
+      throw new Error("Email is required");
+    }
+
+    if (!password) {
+      throw new Error("Password is required");
+    }
+    if (password !== confirm) {
+      throw new Error("Passwords do not match");
+    }
+  };
+
+
   const handleSubmit = async () => {
     setError(null);
-    if (password !== confirm) {
-      setError("Passwords do not match");
-      return;
-    }
-    setLoading(true);
     try {
+      validateInputs();
+      setLoading(true);
+
+
       const authRepo = new FirebaseAuthRepository();
-      const signUp = new SignUpUseCase(authRepo);
-      const uid = await signUp.execute(email, password, "user");
+      const signUpUC = new SignUpUseCase(authRepo);
+      const uid = await signUpUC.execute(email, password, "user");
+
+
+      localStorage.setItem("uid", uid);
+      localStorage.setItem("role", "user");
+      localStorage.setItem("name", name);
 
       const userEntity = User.create({ id: uid, name, email, password });
-      const userRepo = new FirebaseUserRepository();
-      const createU = new CreateUser(userRepo);
+      const userRepo   = new FirebaseUserRepository();
+      const createU    = new CreateUser(userRepo);
       await createU.execute(userEntity);
 
+
       navigate("/profile");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err: unknown) {
-      setError("Failed to sign up");
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+
+      setError(err.message || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -54,6 +83,7 @@ export const SignUpUser = () => {
   return (
     <Container maxWidth="sm">
       <Box mt={6} display="flex" flexDirection="column" gap={2}>
+
         <Typography
           variant="h2"
           align="center"
@@ -61,24 +91,14 @@ export const SignUpUser = () => {
           sx={{
             color: orange[600],
             fontFamily: "Courier, monospace",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            width: 0,
-            mx: "auto",
-            "@keyframes typing": {
-              from: { width: 0 },
-              to: { width: `${len}ch` },
-            },
-            "@keyframes blink": {
-              "0%, 49%": { borderColor: "transparent" },
-              "50%, 100%": { borderColor: orange[600] },
-            },
-            animation: `typing 2s steps(${len}) forwards`,
+
           }}
         >
-          User Sign Up
+          User SingUp
         </Typography>
+
         {error && <Alert severity="error">{error}</Alert>}
+
         <TextField
           label="Name"
           value={name}
@@ -106,7 +126,12 @@ export const SignUpUser = () => {
           onChange={(e) => setConfirm(e.target.value)}
           fullWidth
         />
-        <Button variant="contained" onClick={handleSubmit} disabled={loading}>
+
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
           {loading ? "Signing Up…" : "Sign Up"}
         </Button>
       </Box>

@@ -53,6 +53,7 @@ export const NavBar: React.FC = () => {
     { text: "My Profile", to: "/profile" },
   ];
   const loggedRestItems = [
+    { text: "Manage Dishes", to: `/restaurant/${localStorage.getItem("uid")}/manage-dishes` },
     { text: "Add Dish", to: `/restaurant/${localStorage.getItem("uid")}/add-dish` },
     { text: "Orders Received", to: "/orders-received" },
     { text: "My Profile", to: "/profile-restaurant" },

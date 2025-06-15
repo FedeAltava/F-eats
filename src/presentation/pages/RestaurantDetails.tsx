@@ -74,31 +74,18 @@ export const RestaurantDetails: React.FC = () => {
   }
 
   const role = localStorage.getItem("role");
-  const title = "Menu";
-  const len = title.length;
+
   return (
     <>
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography
-          variant="h2"
+          variant="h3"
           align="center"
           gutterBottom
           sx={{
             color: orange[600],
             fontFamily: "Courier, monospace",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            width: 0,
-            mx: "auto",
-            "@keyframes typing": {
-              from: { width: 0 },
-              to: { width: `${len}ch` },
-            },
-            "@keyframes blink": {
-              "0%, 49%": { borderColor: "transparent" },
-              "50%, 100%": { borderColor: orange[600] },
-            },
-            animation: `typing 2s steps(${len}) forwards`,
+
           }}
         >
           Menu

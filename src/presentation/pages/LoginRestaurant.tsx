@@ -19,8 +19,7 @@ export const LoginRestaurant = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const title = "Restaurant Login";
-  const len = title.length;
+
   const handleLogin = async () => {
     setError(null);
     setLoading(true);
@@ -56,25 +55,12 @@ export const LoginRestaurant = () => {
     <Container maxWidth="sm">
       <Box mt={6} display="flex" flexDirection="column" gap={2}>
         <Typography
-          variant="h2"
+          variant="h3"
           align="center"
           gutterBottom
           sx={{
             color: orange[600],
             fontFamily: "Courier, monospace",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            width: 0,
-            mx: "auto",
-            "@keyframes typing": {
-              from: { width: 0 },
-              to: { width: `${len}ch` },
-            },
-            "@keyframes blink": {
-              "0%, 49%": { borderColor: "transparent" },
-              "50%, 100%": { borderColor: orange[600] },
-            },
-            animation: `typing 2s steps(${len}) forwards`,
           }}
         >
           Restaurant Login

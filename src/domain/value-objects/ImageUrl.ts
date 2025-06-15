@@ -1,25 +1,26 @@
+
 import { ValueObject } from "./shared/value-object";
 
 interface ImageUrlProps {
-    value: string;
+  value: string;
 }
 
-const URL_PATTERN = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/i;
-
 export class ImageUrl extends ValueObject<ImageUrlProps> {
-    private constructor(props: ImageUrlProps) {
-        super(props);
+  get value(): string {
+    return this.props.value;
+  }
+
+  public static create(url: string): ImageUrl {
+    if (!url) {
+      throw new Error("Image URL is required");
     }
 
-    get value(): string {
-        return this.props.value;
+    try {
+      new URL(url);
+    } catch {
+      throw new Error("Invalid URL format");
     }
 
-    public static create(url: string): ImageUrl {
-        if (!url || !URL_PATTERN.test(url)) {
-            throw new Error("Invalid image URL");
-        }
-
-        return new ImageUrl({ value: url });
-    }
+    return new ImageUrl({ value: url });
+  }
 }

@@ -30,8 +30,7 @@ export const RestaurantOrders: React.FC = () => {
   const [ordersWithUser, setOrdersWithUser] = useState<OrderWithUserName[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const title = "Orders Received";
-  const len = title.length;
+
   useEffect(() => {
     (async () => {
       const role = localStorage.getItem("role");
@@ -102,25 +101,12 @@ export const RestaurantOrders: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 5 }}>
-      <Typography variant="h2"
+      <Typography variant="h3"
           align="center"
           gutterBottom
           sx={{
             color: orange[600],
             fontFamily: "Courier, monospace",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            width: 0,
-            mx: "auto",
-            "@keyframes typing": {
-              from: { width: 0 },
-              to: { width: `${len}ch` },
-            },
-            "@keyframes blink": {
-              "0%, 49%": { borderColor: "transparent" },
-              "50%, 100%": { borderColor: orange[600] },
-            },
-            animation: `typing 2s steps(${len}) forwards`,
           }}>
         Orders Received
       </Typography>
